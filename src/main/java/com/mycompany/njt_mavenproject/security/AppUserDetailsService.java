@@ -14,19 +14,35 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
+ * Implementacija Spring Security servisa za učitavanje korisničkih podataka.
+ * Koristi se tokom autentifikacije za pronalaženje korisnika po korisničkom imenu
+ * i mapiranje uloge iz baze podataka u Spring Security autoritet.
  *
- * @author Korisnik
+ * @author Bojana
  */
 @Service
+public class AppUserDetailsService implements UserDetailsService {
 
-public class AppUserDetailsService implements UserDetailsService{
-    
     private final VlasnikRepository users;
 
+    /**
+     * Konstruktor koji injektuje repozitorijum vlasnika.
+     *
+     * @param users repozitorijum za pristup podacima o vlasnicima
+     */
     public AppUserDetailsService(VlasnikRepository users) {
         this.users = users;
     }
 
+    /**
+     * Učitava korisničke podatke na osnovu korisničkog imena.
+     * Pronalazi vlasnika u bazi podataka i kreira Spring Security
+     * {@link UserDetails} objekat sa odgovarajućom ulogom.
+     *
+     * @param username korisničko ime korisnika koji se autentifikuje
+     * @return {@link UserDetails} objekat sa podacima o korisniku i njegovim pravima
+     * @throws UsernameNotFoundException ako korisnik sa datim korisničkim imenom ne postoji
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Vlasnik u = users.findByUsername(username);
@@ -38,10 +54,9 @@ public class AppUserDetailsService implements UserDetailsService{
                 u.getLozinka(),
                 u.isEnabled(),
                 true, // accountNonExpired
-                true,// credentialsNonExpired
-                true,// accountNonLocked
+                true, // credentialsNonExpired
+                true, // accountNonLocked
                 List.of(new SimpleGrantedAuthority("ROLE_" + u.getUloga().name()))
         );
     }
-    
 }

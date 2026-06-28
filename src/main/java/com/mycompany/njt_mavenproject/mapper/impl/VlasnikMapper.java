@@ -11,20 +11,37 @@ import com.mycompany.njt_mavenproject.mapper.DtoEntityMapper;
 import org.springframework.stereotype.Component;
 
 /**
+ * Mapper klasa za konverziju između {@link Vlasnik} entiteta
+ * i {@link VlasnikDto} objekata.
+ * Lozinka se nikada ne prenosi iz entiteta u DTO radi bezbednosti,
+ * a enkodovanje lozinke se obavlja u servisnom sloju.
  *
- * @author Korisnik
+ * @author Bojana
  */
 @Component
+public class VlasnikMapper implements DtoEntityMapper<VlasnikDto, Vlasnik> {
 
-public class VlasnikMapper implements DtoEntityMapper<VlasnikDto, Vlasnik>{
-    
+    /**
+     * Konvertuje entitet vlasnika u DTO objekat.
+     * Lozinka se nikada ne uključuje u DTO iz bezbednosnih razloga.
+     *
+     * @param e entitet vlasnika koji se konvertuje, može biti {@code null}
+     * @return DTO objekat sa podacima vlasnika, ili {@code null} ako je entitet {@code null}
+     */
     @Override
     public VlasnikDto toDto(Vlasnik e) {
         if (e == null) return null;
         return new VlasnikDto(e.getId(), e.getIme(), e.getPrezime(), e.getUsername(), e.getEmail(), e.getUloga());
-        // password NIKAD ne punimo u DTO iz entiteta
     }
 
+    /**
+     * Konvertuje DTO objekat u entitet vlasnika.
+     * Enkodovana lozinka se postavlja naknadno u servisnom sloju,
+     * nakon prolaska kroz password encoder.
+     *
+     * @param t DTO objekat vlasnika koji se konvertuje, može biti {@code null}
+     * @return entitet vlasnika spreman za dalju obradu, ili {@code null} ako je DTO {@code null}
+     */
     @Override
     public Vlasnik toEntity(VlasnikDto t) {
         if (t == null) return null;
@@ -34,9 +51,8 @@ public class VlasnikMapper implements DtoEntityMapper<VlasnikDto, Vlasnik>{
         u.setPrezime(t.getPrezime());
         u.setUsername(t.getUsername());
         u.setEmail(t.getEmail());
-        // passwordHash se postavlja u servisu (posle encoder-a), ne ovde
+        // lozinka se postavlja u servisu nakon enkodovanja, ne ovde
         u.setUloga(t.getUloga());
         return u;
     }
-    
 }

@@ -5,12 +5,26 @@ import com.mycompany.njt_mavenproject.entity.impl.Servis;
 import com.mycompany.njt_mavenproject.mapper.DtoEntityMapper;
 import org.springframework.stereotype.Component;
 
+/**
+ * Mapper klasa za konverziju između {@link Servis} entiteta
+ * i {@link ServisDto} objekata.
+ * Cenovnik usluga po servisu se ne mapira ovde, već se dohvata
+ * posebno putem /api/servis/{id}/cenovnik endpointa.
+ *
+ * @author Bojana
+ */
 @Component
 public class ServisMapper implements DtoEntityMapper<ServisDto, Servis> {
 
+    /**
+     * Konvertuje entitet servisa u DTO objekat.
+     * Cenovnik usluga se ne uključuje u konverziju.
+     *
+     * @param e entitet servisa koji se konvertuje
+     * @return DTO objekat sa osnovnim podacima servisa
+     */
     @Override
     public ServisDto toDto(Servis e) {
-        // Nema više e.getUsluge(); cenovnik po servisu ide preko /api/servis/{id}/cenovnik
         return new ServisDto(
                 e.getId(),
                 e.getNaziv(),
@@ -19,9 +33,15 @@ public class ServisMapper implements DtoEntityMapper<ServisDto, Servis> {
         );
     }
 
+    /**
+     * Konvertuje DTO objekat u entitet servisa.
+     * Veze sa uslugama se ignorišu i vode se u tabeli servis_usluga.
+     *
+     * @param t DTO objekat servisa koji se konvertuje
+     * @return entitet servisa spreman za perzistenciju
+     */
     @Override
     public Servis toEntity(ServisDto t) {
-        // DTO.usluge ignorisemo – veze se vode u servis_usluga
         return new Servis(
                 t.getId(),
                 t.getNaziv(),
