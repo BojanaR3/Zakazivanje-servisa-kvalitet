@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.njt_mavenproject.entity.impl;
 
 import com.mycompany.njt_mavenproject.entity.MyEntity;
@@ -12,54 +8,99 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Entitet koji predstavlja rezervaciju termina u servisu za vozila.
+ * Kombinacija servis_id i datum mora biti jedinstvena.
  *
- * @author Korisnik
+ * @author Bojana
  */
 @Entity
 @Table(
     name = "rezervacija",
     uniqueConstraints = @UniqueConstraint(columnNames = {"servis_id", "datum"})
 )
+public class Rezervacija implements MyEntity {
 
-public class Rezervacija implements MyEntity{
-    
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    /** Jedinstveni identifikator rezervacije. */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** Datum i vreme rezervisanog termina. */
     @Column(nullable = false)
     private LocalDateTime datum;
 
+    /** Status rezervacije (CREATED, CONFIRMED, CANCELED, COMPLETED). */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private StatusRezervacije status = StatusRezervacije.CREATED;
 
+    /** Ukupan iznos rezervacije izračunat iz stavki. */
     @Column(nullable = false)
     private Double ukupanIznos = 0.0;
 
-    // NOVO: ukupno trajanje rezervacije u minutima (za overlap check)
+    /** Ukupno trajanje rezervacije u minutima, koristi se za proveru preklapanja termina. */
     @Column(name = "trajanje_min", nullable = false)
     private Integer trajanjeMin = 0;
 
+    /** Vlasnik koji je kreirao rezervaciju. */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="vlasnik_id", nullable = false)
+    @JoinColumn(name = "vlasnik_id", nullable = false)
     private Vlasnik vlasnik;
 
+    /** Vozilo koje se servisira u okviru rezervacije. */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="vozilo_id", nullable = false)
+    @JoinColumn(name = "vozilo_id", nullable = false)
     private Vozilo vozilo;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false) //vise rezervacija moze biti za jedan servis
-    @JoinColumn(name="servis_id", nullable = false)
+    /** Servis u kome je rezervisan termin. */
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "servis_id", nullable = false)
     private Servis servis;
 
-    @OneToMany(mappedBy="rezervacija", cascade = CascadeType.ALL, orphanRemoval = true)
+    /** Lista stavki rezervacije. */
+    @OneToMany(mappedBy = "rezervacija", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StavkaRezervacije> stavke = new ArrayList<>();
-    
-    public Rezervacija(Long id) {
-		// TODO Auto-generated constructor stub
-    	this.id = id;
-	}
 
+    /**
+     * Konstruktor koji kreira referencu na rezervaciju sa zadatim ID-em.
+     *
+     * @param id jedinstveni identifikator rezervacije
+     */
+    public Rezervacija(Long id) {
+        this.id = id;
+    }
+
+    /**
+     * Podrazumevani konstruktor.
+     */
+    public Rezervacija() {}
+
+    /**
+     * Konstruktor sa svim parametrima.
+     *
+     * @param id          jedinstveni identifikator rezervacije
+     * @param datum       datum i vreme rezervacije
+     * @param ukupanIznos ukupan iznos rezervacije
+     * @param status      status rezervacije
+     * @param vlasnik     vlasnik koji je kreirao rezervaciju
+     * @param vozilo      vozilo koje se servisira
+     * @param servis      servis u kome je rezervisan termin
+     */
+    public Rezervacija(Long id, LocalDateTime datum, Double ukupanIznos, StatusRezervacije status,
+                       Vlasnik vlasnik, Vozilo vozilo, Servis servis) {
+        this.id = id;
+        this.datum = datum;
+        this.ukupanIznos = ukupanIznos;
+        this.status = status;
+        this.vlasnik = vlasnik;
+        this.vozilo = vozilo;
+        this.servis = servis;
+    }
+
+    /**
+     * Metoda koja se poziva pre čuvanja entiteta u bazu.
+     * Postavlja datum na trenutno vreme ako nije zadat i izračunava ukupan iznos.
+     */
     @PrePersist
     public void prePersist() {
         if (datum == null) datum = LocalDateTime.now();
@@ -67,18 +108,32 @@ public class Rezervacija implements MyEntity{
         if (trajanjeMin == null) trajanjeMin = 0;
     }
 
-    public void addItem(StavkaRezervacije item){
+    /**
+     * Dodaje stavku u rezervaciju i ažurira ukupan iznos.
+     *
+     * @param item stavka rezervacije koja se dodaje
+     */
+    public void addItem(StavkaRezervacije item) {
         item.setRezervacija(this);
         this.stavke.add(item);
         recalcTotal();
     }
-    public void removeItem(StavkaRezervacije item){
+
+    /**
+     * Uklanja stavku iz rezervacije i ažurira ukupan iznos.
+     *
+     * @param item stavka rezervacije koja se uklanja
+     */
+    public void removeItem(StavkaRezervacije item) {
         item.setRezervacija(null);
         this.stavke.remove(item);
         recalcTotal();
     }
 
-    //Uvek pozovi nakon izmene stavki/popusta/kol. 
+    /**
+     * Izračunava i ažurira ukupan iznos rezervacije na osnovu svih stavki.
+     * Treba pozivati nakon svake izmene stavki, količine ili popusta.
+     */
     public void recalcTotal() {
         double ukupno = 0.0;
         for (StavkaRezervacije stavka : stavke) {
@@ -87,90 +142,129 @@ public class Rezervacija implements MyEntity{
         this.ukupanIznos = ukupno;
     }
 
-    public Rezervacija() {
-    }
+    /**
+     * Vraća ID rezervacije.
+     *
+     * @return jedinstveni identifikator
+     */
+    public Long getId() { return id; }
 
-    public Rezervacija(Long id, LocalDateTime datum, Double ukupanIznos, StatusRezervacije status, Vlasnik vlasnik, Vozilo vozilo, Servis servis) {
-        this.id = id;
-        this.datum = datum;
-        this.ukupanIznos = ukupanIznos;
-        this.status = status;
-        this.vlasnik = vlasnik;
-        this.vozilo = vozilo;
-        this.servis = servis;
-    }
+    /**
+     * Postavlja ID rezervacije.
+     *
+     * @param id jedinstveni identifikator
+     */
+    public void setId(Long id) { this.id = id; }
 
-    public Long getId() {
-        return id;
-    }
+    /**
+     * Vraća datum i vreme rezervacije.
+     *
+     * @return datum rezervacije
+     */
+    public LocalDateTime getDatum() { return datum; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    /**
+     * Postavlja datum i vreme rezervacije.
+     *
+     * @param datum datum i vreme rezervacije
+     */
+    public void setDatum(LocalDateTime datum) { this.datum = datum; }
 
-    public LocalDateTime getDatum() {
-        return datum;
-    }
+    /**
+     * Vraća ukupan iznos rezervacije.
+     *
+     * @return ukupan iznos
+     */
+    public Double getUkupanIznos() { return ukupanIznos; }
 
-    public void setDatum(LocalDateTime datum) {
-        this.datum = datum;
-    }
+    /**
+     * Postavlja ukupan iznos rezervacije.
+     *
+     * @param ukupanIznos ukupan iznos
+     */
+    public void setUkupanIznos(Double ukupanIznos) { this.ukupanIznos = ukupanIznos; }
 
-    public Double getUkupanIznos() {
-        return ukupanIznos;
-    }
+    /**
+     * Vraća status rezervacije.
+     *
+     * @return status rezervacije
+     */
+    public StatusRezervacije getStatus() { return status; }
 
-    public void setUkupanIznos(Double ukupanIznos) {
-        this.ukupanIznos = ukupanIznos;
-    }
+    /**
+     * Postavlja status rezervacije.
+     *
+     * @param status status rezervacije
+     */
+    public void setStatus(StatusRezervacije status) { this.status = status; }
 
-    public StatusRezervacije getStatus() {
-        return status;
-    }
+    /**
+     * Vraća vlasnika koji je kreirao rezervaciju.
+     *
+     * @return vlasnik
+     */
+    public Vlasnik getVlasnik() { return vlasnik; }
 
-    public void setStatus(StatusRezervacije status) {
-        this.status = status;
-    }
+    /**
+     * Postavlja vlasnika rezervacije.
+     *
+     * @param vlasnik vlasnik rezervacije
+     */
+    public void setVlasnik(Vlasnik vlasnik) { this.vlasnik = vlasnik; }
 
-    public Vlasnik getVlasnik() {
-        return vlasnik;
-    }
+    /**
+     * Vraća vozilo koje se servisira.
+     *
+     * @return vozilo
+     */
+    public Vozilo getVozilo() { return vozilo; }
 
-    public void setVlasnik(Vlasnik vlasnik) {
-        this.vlasnik = vlasnik;
-    }
+    /**
+     * Postavlja vozilo koje se servisira.
+     *
+     * @param vozilo vozilo rezervacije
+     */
+    public void setVozilo(Vozilo vozilo) { this.vozilo = vozilo; }
 
-    public Vozilo getVozilo() {
-        return vozilo;
-    }
+    /**
+     * Vraća servis u kome je rezervisan termin.
+     *
+     * @return servis
+     */
+    public Servis getServis() { return servis; }
 
-    public void setVozilo(Vozilo vozilo) {
-        this.vozilo = vozilo;
-    }
+    /**
+     * Postavlja servis rezervacije.
+     *
+     * @param servis servis u kome je termin rezervisan
+     */
+    public void setServis(Servis servis) { this.servis = servis; }
 
-    public Servis getServis() {
-        return servis;
-    }
+    /**
+     * Vraća listu stavki rezervacije.
+     *
+     * @return lista stavki
+     */
+    public List<StavkaRezervacije> getStavke() { return stavke; }
 
-    public void setServis(Servis servis) {
-        this.servis = servis;
-    }
+    /**
+     * Postavlja listu stavki rezervacije.
+     *
+     * @param stavke lista stavki rezervacije
+     */
+    public void setStavke(List<StavkaRezervacije> stavke) { this.stavke = stavke; }
 
-    public List<StavkaRezervacije> getStavke() {
-        return stavke;
-    }
+    /**
+     * Vraća ukupno trajanje rezervacije u minutima.
+     *
+     * @return trajanje u minutima
+     */
+    public Integer getTrajanjeMin() { return trajanjeMin; }
 
-    public void setStavke(List<StavkaRezervacije> stavke) {
-        this.stavke = stavke;
-    }
-
-    public Integer getTrajanjeMin() {
-        return trajanjeMin;
-    }
-
-    public void setTrajanjeMin(Integer trajanjeMin) {
-        this.trajanjeMin = trajanjeMin;
-    }
-   
-    
+    /**
+     * Postavlja ukupno trajanje rezervacije u minutima.
+     *
+     * @param trajanjeMin trajanje u minutima
+     */
+    public void setTrajanjeMin(Integer trajanjeMin) { this.trajanjeMin = trajanjeMin; }
 }

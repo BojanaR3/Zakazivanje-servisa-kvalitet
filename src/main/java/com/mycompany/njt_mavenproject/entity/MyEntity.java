@@ -1,13 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package com.mycompany.njt_mavenproject.entity;
 
 /**
+ * Marker interfejs koji implementiraju sve domenske entitet klase u aplikaciji.
  *
- * @author Korisnik
+ * @author Bojana
  */
 public interface MyEntity {
-    
 }

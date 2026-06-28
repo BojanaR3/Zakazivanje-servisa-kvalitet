@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.njt_mavenproject.entity.impl;
 
 import com.mycompany.njt_mavenproject.entity.MyEntity;
@@ -11,55 +7,78 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Entitet koji predstavlja vlasnika vozila i korisnika sistema.
+ * Email i username moraju biti jedinstveni.
  *
- * @author Korisnik
+ * @author Bojana
  */
 @Entity
 @Table(
-  name="vlasnik",
-  uniqueConstraints = {
-    @UniqueConstraint(name="uk_vlasnik_email", columnNames="email"),
-    @UniqueConstraint(name="uk_vlasnik_username", columnNames="username")
-  }
+    name = "vlasnik",
+    uniqueConstraints = {
+        @UniqueConstraint(name = "uk_vlasnik_email", columnNames = "email"),
+        @UniqueConstraint(name = "uk_vlasnik_username", columnNames = "username")
+    }
 )
+public class Vlasnik implements MyEntity {
 
-public class Vlasnik implements MyEntity{
-    
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    /** Jedinstveni identifikator vlasnika. */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable=false, length=50)
+    /** Ime vlasnika. */
+    @Column(nullable = false, length = 50)
     private String ime;
 
-    @Column(nullable=false, length=50)
+    /** Prezime vlasnika. */
+    @Column(nullable = false, length = 50)
     private String prezime;
 
-    @Column(nullable=false, length=120)
+    /** Email adresa vlasnika, mora biti jedinstvena. */
+    @Column(nullable = false, length = 120)
     private String email;
 
-    @Column(nullable=false, length=50)
+    /** Korisničko ime vlasnika, mora biti jedinstveno. */
+    @Column(nullable = false, length = 50)
     private String username;
 
-    @Column(nullable=false)
+    /** Hešovana lozinka vlasnika. */
+    @Column(nullable = false)
     private String lozinka;
 
+    /** Uloga korisnika u sistemu, podrazumevano VLASNIK. */
     @Enumerated(EnumType.STRING)
-    @Column(nullable=false, length=20)
+    @Column(nullable = false, length = 20)
     private Uloga uloga = Uloga.VLASNIK;
 
-    @Column(nullable=false)
-    private boolean enabled = false; // ← VAŽNO za email verifikaciju
+    /** Oznaka da li je nalog aktiviran putem email verifikacije. */
+    @Column(nullable = false)
+    private boolean enabled = false;
 
-
-    @OneToMany(mappedBy="vlasnik", cascade=CascadeType.ALL, orphanRemoval=true)
+    /** Lista vozila u vlasništvu korisnika. */
+    @OneToMany(mappedBy = "vlasnik", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Vozilo> vozila = new ArrayList<>();
 
-    @OneToMany(mappedBy="vlasnik")
+    /** Lista rezervacija koje je vlasnik kreirao. */
+    @OneToMany(mappedBy = "vlasnik")
     private List<Rezervacija> rezervacije = new ArrayList<>();
 
-    public Vlasnik() {
-    }
+    /**
+     * Podrazumevani konstruktor.
+     */
+    public Vlasnik() {}
 
+    /**
+     * Konstruktor sa svim parametrima.
+     *
+     * @param id       jedinstveni identifikator vlasnika
+     * @param ime      ime vlasnika
+     * @param prezime  prezime vlasnika
+     * @param email    email adresa vlasnika
+     * @param username korisničko ime vlasnika
+     * @param lozinka  lozinka vlasnika
+     */
     public Vlasnik(Long id, String ime, String prezime, String email, String username, String lozinka) {
         this.id = id;
         this.ime = ime;
@@ -69,94 +88,150 @@ public class Vlasnik implements MyEntity{
         this.lozinka = lozinka;
     }
 
-    public Vlasnik(Long id) {
-        this.id = id;
-        
-    }
-    
-    public String getUsername() {
-        return username;
-    }
+    /**
+     * Konstruktor koji kreira referencu na vlasnika sa zadatim ID-em.
+     *
+     * @param id jedinstveni identifikator vlasnika
+     */
+    public Vlasnik(Long id) { this.id = id; }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    /**
+     * Vraća ID vlasnika.
+     *
+     * @return jedinstveni identifikator
+     */
+    public Long getId() { return id; }
 
-    
+    /**
+     * Postavlja ID vlasnika.
+     *
+     * @param id jedinstveni identifikator
+     */
+    public void setId(Long id) { this.id = id; }
 
-    public Uloga getUloga() {
-        return uloga;
-    }
+    /**
+     * Vraća ime vlasnika.
+     *
+     * @return ime
+     */
+    public String getIme() { return ime; }
 
-    public void setUloga(Uloga uloga) {
-        this.uloga = uloga;
-    }
+    /**
+     * Postavlja ime vlasnika.
+     *
+     * @param ime ime vlasnika
+     */
+    public void setIme(String ime) { this.ime = ime; }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
+    /**
+     * Vraća prezime vlasnika.
+     *
+     * @return prezime
+     */
+    public String getPrezime() { return prezime; }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
+    /**
+     * Postavlja prezime vlasnika.
+     *
+     * @param prezime prezime vlasnika
+     */
+    public void setPrezime(String prezime) { this.prezime = prezime; }
 
-    
-    public Long getId() {
-        return id;
-    }
+    /**
+     * Vraća email adresu vlasnika.
+     *
+     * @return email adresa
+     */
+    public String getEmail() { return email; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    /**
+     * Postavlja email adresu vlasnika.
+     *
+     * @param email email adresa vlasnika
+     */
+    public void setEmail(String email) { this.email = email; }
 
-    public String getIme() {
-        return ime;
-    }
+    /**
+     * Vraća korisničko ime vlasnika.
+     *
+     * @return korisničko ime
+     */
+    public String getUsername() { return username; }
 
-    public void setIme(String ime) {
-        this.ime = ime;
-    }
+    /**
+     * Postavlja korisničko ime vlasnika.
+     *
+     * @param username korisničko ime vlasnika
+     */
+    public void setUsername(String username) { this.username = username; }
 
-    public String getPrezime() {
-        return prezime;
-    }
+    /**
+     * Vraća hešovanu lozinku vlasnika.
+     *
+     * @return lozinka
+     */
+    public String getLozinka() { return lozinka; }
 
-    public void setPrezime(String prezime) {
-        this.prezime = prezime;
-    }
+    /**
+     * Postavlja hešovanu lozinku vlasnika.
+     *
+     * @param lozinka hešovana lozinka
+     */
+    public void setLozinka(String lozinka) { this.lozinka = lozinka; }
 
-    public String getEmail() {
-        return email;
-    }
+    /**
+     * Vraća ulogu korisnika u sistemu.
+     *
+     * @return uloga (VLASNIK ili ADMIN)
+     */
+    public Uloga getUloga() { return uloga; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    /**
+     * Postavlja ulogu korisnika u sistemu.
+     *
+     * @param uloga uloga korisnika
+     */
+    public void setUloga(Uloga uloga) { this.uloga = uloga; }
 
-    public String getLozinka() {
-        return lozinka;
-    }
+    /**
+     * Proverava da li je nalog aktiviran.
+     *
+     * @return true ako je nalog aktiviran, false ako nije
+     */
+    public boolean isEnabled() { return enabled; }
 
-    public void setLozinka(String lozinka) {
-        this.lozinka = lozinka;
-    }
+    /**
+     * Postavlja status aktivacije naloga.
+     *
+     * @param enabled true ako je nalog aktiviran
+     */
+    public void setEnabled(boolean enabled) { this.enabled = enabled; }
 
-    public List<Vozilo> getVozila() {
-        return vozila;
-    }
+    /**
+     * Vraća listu vozila vlasnika.
+     *
+     * @return lista vozila
+     */
+    public List<Vozilo> getVozila() { return vozila; }
 
-    public void setVozila(List<Vozilo> vozila) {
-        this.vozila = vozila;
-    }
+    /**
+     * Postavlja listu vozila vlasnika.
+     *
+     * @param vozila lista vozila
+     */
+    public void setVozila(List<Vozilo> vozila) { this.vozila = vozila; }
 
-    public List<Rezervacija> getRezervacije() {
-        return rezervacije;
-    }
+    /**
+     * Vraća listu rezervacija vlasnika.
+     *
+     * @return lista rezervacija
+     */
+    public List<Rezervacija> getRezervacije() { return rezervacije; }
 
-    public void setRezervacije(List<Rezervacija> rezervacije) {
-        this.rezervacije = rezervacije;
-    }
-    
-    
-    
+    /**
+     * Postavlja listu rezervacija vlasnika.
+     *
+     * @param rezervacije lista rezervacija
+     */
+    public void setRezervacije(List<Rezervacija> rezervacije) { this.rezervacije = rezervacije; }
 }

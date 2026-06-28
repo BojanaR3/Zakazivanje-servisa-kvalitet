@@ -1,13 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.njt_mavenproject.controller;
 
-/**
- *
- * @author Korisnik
- */
 import com.mycompany.njt_mavenproject.dto.impl.RezervacijaDto;
 import com.mycompany.njt_mavenproject.entity.impl.StatusRezervacije;
 import com.mycompany.njt_mavenproject.servis.RezervacijaService;
@@ -19,10 +11,16 @@ import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 
+/**
+ * REST kontroler za upravljanje rezervacijama.
+ * ADMIN može da pregleda sve rezervacije, menja status i briše.
+ * VLASNIK može da kreira, pregleda svoje, menja termin i otkazuje svoje rezervacije.
+ *
+ * @author Bojana
+ */
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/rezervacija")
@@ -30,47 +28,79 @@ public class RezervacijaKontroler {
 
     private final RezervacijaService service;
 
+    /**
+     * Konstruktor koji injektuje servis za rezervacije.
+     *
+     * @param service servis za upravljanje rezervacijama
+     */
     public RezervacijaKontroler(RezervacijaService service) {
         this.service = service;
     }
 
-    // ===== ADMIN: sve rezervacije
+    /**
+     * Vraća listu svih rezervacija. Dostupno samo ADMINu.
+     *
+     * @return lista svih rezervacija
+     */
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<RezervacijaDto>> all() {
         return ResponseEntity.ok(service.findAll());
     }
 
-    // ===== VLASNIK: svoje rezervacije
+    /**
+     * Vraća listu rezervacija trenutno prijavljenog vlasnika.
+     *
+     * @param auth objekat autentifikacije iz Spring Security konteksta
+     * @return lista rezervacija prijavljenog vlasnika
+     */
     @GetMapping("/moje")
     public ResponseEntity<List<RezervacijaDto>> my(Authentication auth) {
-        return ResponseEntity.ok(service.findMineByUsername(auth.getName())); 
+        return ResponseEntity.ok(service.findMineByUsername(auth.getName()));
     }
 
-    // ===== ADMIN: po ID
+    /**
+     * Vraća rezervaciju sa zadatim ID-em. Dostupno samo ADMINu.
+     *
+     * @param id jedinstveni identifikator rezervacije
+     * @return rezervacija sa zadatim ID-em
+     * @throws Exception u slučaju da rezervacija nije pronađena
+     */
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RezervacijaDto> byId(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    // ===== VLASNIK: kreiraj rezervaciju sa stavkama
+    /**
+     * Kreira novu rezervaciju sa stavkama za prijavljenog vlasnika.
+     *
+     * @param dto  podaci nove rezervacije
+     * @param auth objekat autentifikacije iz Spring Security konteksta
+     * @return kreirana rezervacija sa statusom 201, ili poruka o grešci
+     */
     @PostMapping
     @Operation(summary = "Kreiraj rezervaciju sa stavkama (VLASNIK)")
     public ResponseEntity<?> create(@Valid @RequestBody @NotNull RezervacijaDto dto,
                                     Authentication auth) {
         try {
-            RezervacijaDto saved = service.create(dto, auth.getName()); // vlasnik iz JWT (username)
+            RezervacijaDto saved = service.create(dto, auth.getName());
             return new ResponseEntity<>(saved, HttpStatus.CREATED);
         } catch (IllegalStateException dup) {
-            // npr. kad je termin već zauzet (unique constraint na (servis_id, datum))
             return new ResponseEntity<>(dup.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception ex) {
             return new ResponseEntity<>("Greška: " + ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    // ===== ADMIN: promeni status
+    /**
+     * Menja status rezervacije sa zadatim ID-em. Dostupno samo ADMINu.
+     *
+     * @param id     jedinstveni identifikator rezervacije
+     * @param status novi status rezervacije
+     * @return ažurirana rezervacija
+     * @throws Exception u slučaju da rezervacija nije pronađena
+     */
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RezervacijaDto> updateStatus(@PathVariable Long id,
@@ -78,15 +108,26 @@ public class RezervacijaKontroler {
         return ResponseEntity.ok(service.updateStatus(id, status));
     }
 
-    // ===== ADMIN: obriši
+    /**
+     * Briše rezervaciju sa zadatim ID-em. Dostupno samo ADMINu.
+     *
+     * @param id jedinstveni identifikator rezervacije koja se briše
+     * @return poruka o uspešnom brisanju
+     */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         service.deleteById(id);
         return ResponseEntity.ok("Rezervacija obrisana");
     }
-    
-    // ===== VLASNIK: otkaži (samo ako je CREATED i ako je moja)
+
+    /**
+     * Otkazuje rezervaciju prijavljenog vlasnika. Moguće samo ako je rezervacija u statusu CREATED.
+     *
+     * @param id   jedinstveni identifikator rezervacije
+     * @param auth objekat autentifikacije iz Spring Security konteksta
+     * @return prazan odgovor sa statusom 204, ili poruka o grešci
+     */
     @DeleteMapping("/{id}/moja")
     public ResponseEntity<?> cancelMy(@PathVariable Long id, Authentication auth) {
         try {
@@ -99,7 +140,14 @@ public class RezervacijaKontroler {
         }
     }
 
-    // ===== VLASNIK: promeni termin (samo ako je CREATED i ako je moja)
+    /**
+     * Menja termin rezervacije prijavljenog vlasnika. Moguće samo ako je rezervacija u statusu CREATED.
+     *
+     * @param id   jedinstveni identifikator rezervacije
+     * @param novi novi datum i vreme rezervacije
+     * @param auth objekat autentifikacije iz Spring Security konteksta
+     * @return ažurirana rezervacija, ili poruka o grešci
+     */
     @PatchMapping("/{id}/termin")
     public ResponseEntity<?> rescheduleMy(@PathVariable Long id,
                                           @RequestParam("datum")
@@ -116,4 +164,3 @@ public class RezervacijaKontroler {
         }
     }
 }
-

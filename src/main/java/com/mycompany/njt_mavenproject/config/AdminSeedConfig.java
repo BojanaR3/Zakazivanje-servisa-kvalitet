@@ -1,8 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.njt_mavenproject.config;
+
 import com.mycompany.njt_mavenproject.entity.impl.Uloga;
 import com.mycompany.njt_mavenproject.entity.impl.Vlasnik;
 import com.mycompany.njt_mavenproject.repository.impl.VlasnikRepository;
@@ -10,23 +7,31 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 /**
+ * Konfiguraciona klasa koja pri pokretanju aplikacije kreira podrazumevanog ADMIN korisnika
+ * ukoliko on već ne postoji u bazi podataka.
  *
- * @author Korisnik
+ * @author Bojana
  */
 @Configuration
-
 public class AdminSeedConfig {
-    
+
+    /**
+     * Kreira podrazumevanog ADMIN korisnika pri pokretanju aplikacije.
+     * Ako korisnik sa zadatim username-om ili email-om već postoji, preskače kreiranje.
+     *
+     * @param vlasnikRepo repozitorijum za pristup podacima o vlasnicima
+     * @param encoder     enkoder za hešovanje lozinke
+     * @return CommandLineRunner koji se izvršava pri pokretanju aplikacije
+     */
     @Bean
     CommandLineRunner seedAdmin(VlasnikRepository vlasnikRepo, PasswordEncoder encoder) {
         return args -> {
-            // promeni po želji
             final String adminUsername = "admin";
             final String adminEmail    = "admin@lokal.host";
-            final String adminPass     = "admin123"; // biće bcrypt-ovan
+            final String adminPass     = "admin123";
 
-            // ako već postoji (po username ili email), preskoči
             if (vlasnikRepo.existsByUsername(adminUsername) || vlasnikRepo.existsByEmail(adminEmail)) {
                 return;
             }
@@ -44,5 +49,4 @@ public class AdminSeedConfig {
             System.out.println("✅ Kreiran podrazumevani ADMIN korisnik: " + adminUsername + " / " + adminEmail);
         };
     }
-    
 }

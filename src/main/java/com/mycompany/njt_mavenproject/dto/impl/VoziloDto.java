@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.njt_mavenproject.dto.impl;
 
 import com.mycompany.njt_mavenproject.dto.Dto;
@@ -11,11 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * DTO klasa koja predstavlja vozilo.
+ * Koristi se za prenos podataka o vozilu između slojeva aplikacije.
  *
- * @author Korisnik
+ * @author Bojana
  */
-public class VoziloDto implements Dto{
-    
+public class VoziloDto implements Dto {
+
     private Long id;
 
     @NotEmpty(message = "Marka je obavezna.")
@@ -46,12 +44,25 @@ public class VoziloDto implements Dto{
     private String tipGoriva;
 
     private VlasnikDto vlasnik;
-
     private List<ServisDto> servisi = new ArrayList<>();
 
-    public VoziloDto() {
-    }
+    /**
+     * Podrazumevani konstruktor.
+     */
+    public VoziloDto() {}
 
+    /**
+     * Konstruktor sa osnovnim parametrima.
+     *
+     * @param id                  jedinstveni identifikator vozila
+     * @param marka               marka vozila
+     * @param model               model vozila
+     * @param registracija        registarska oznaka vozila
+     * @param kilometraza         pređena kilometraža
+     * @param jedinicaKilometraze jedinica mere kilometraže (km ili mi)
+     * @param godinaProizvodnje   godina proizvodnje vozila
+     * @param tipGoriva           tip goriva vozila
+     */
     public VoziloDto(Long id, String marka, String model, String registracija, Double kilometraza,
                      String jedinicaKilometraze, Integer godinaProizvodnje, String tipGoriva) {
         this.id = id;
@@ -64,84 +75,143 @@ public class VoziloDto implements Dto{
         this.tipGoriva = tipGoriva;
     }
 
-    public Long getId() {
-        return id;
-    }
+    /**
+     * Vraća ID vozila.
+     *
+     * @return jedinstveni identifikator
+     */
+    public Long getId() { return id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    /**
+     * Postavlja ID vozila.
+     *
+     * @param id jedinstveni identifikator
+     */
+    public void setId(Long id) { this.id = id; }
 
-    public String getMarka() {
-        return marka;
-    }
+    /**
+     * Vraća marku vozila.
+     *
+     * @return marka vozila
+     */
+    public String getMarka() { return marka; }
 
-    public void setMarka(String marka) {
-        this.marka = marka;
-    }
+    /**
+     * Postavlja marku vozila.
+     *
+     * @param marka marka vozila (2-50 karaktera)
+     */
+    public void setMarka(String marka) { this.marka = marka; }
 
-    public String getModel() {
-        return model;
-    }
+    /**
+     * Vraća model vozila.
+     *
+     * @return model vozila
+     */
+    public String getModel() { return model; }
 
-    public void setModel(String model) {
-        this.model = model;
-    }
+    /**
+     * Postavlja model vozila.
+     *
+     * @param model model vozila (1-50 karaktera)
+     */
+    public void setModel(String model) { this.model = model; }
 
-    public String getRegistracija() {
-        return registracija;
-    }
+    /**
+     * Vraća registarsku oznaku vozila.
+     *
+     * @return registracija
+     */
+    public String getRegistracija() { return registracija; }
 
-    public void setRegistracija(String registracija) {
-        this.registracija = registracija;
-    }
+    /**
+     * Postavlja registarsku oznaku vozila.
+     *
+     * @param registracija registarska oznaka (2-20 karaktera, mora biti jedinstvena)
+     */
+    public void setRegistracija(String registracija) { this.registracija = registracija; }
 
-    public Double getKilometraza() {
-        return kilometraza;
-    }
+    /**
+     * Vraća pređenu kilometražu vozila.
+     *
+     * @return kilometraža
+     */
+    public Double getKilometraza() { return kilometraza; }
 
-    public void setKilometraza(Double kilometraza) {
-        this.kilometraza = kilometraza;
-    }
+    /**
+     * Postavlja pređenu kilometražu vozila.
+     *
+     * @param kilometraza kilometraža (ne može biti negativna)
+     */
+    public void setKilometraza(Double kilometraza) { this.kilometraza = kilometraza; }
 
-    public String getJedinicaKilometraze() {
-        return jedinicaKilometraze;
-    }
+    /**
+     * Vraća jedinicu mere kilometraže.
+     *
+     * @return jedinica mere (km ili mi)
+     */
+    public String getJedinicaKilometraze() { return jedinicaKilometraze; }
 
-    public void setJedinicaKilometraze(String jedinicaKilometraze) {
-        this.jedinicaKilometraze = jedinicaKilometraze;
-    }
+    /**
+     * Postavlja jedinicu mere kilometraže.
+     *
+     * @param jedinicaKilometraze jedinica mere (km ili mi)
+     */
+    public void setJedinicaKilometraze(String jedinicaKilometraze) { this.jedinicaKilometraze = jedinicaKilometraze; }
 
-    public Integer getGodinaProizvodnje() {
-        return godinaProizvodnje;
-    }
+    /**
+     * Vraća godinu proizvodnje vozila.
+     *
+     * @return godina proizvodnje
+     */
+    public Integer getGodinaProizvodnje() { return godinaProizvodnje; }
 
-    public void setGodinaProizvodnje(Integer godinaProizvodnje) {
-        this.godinaProizvodnje = godinaProizvodnje;
-    }
+    /**
+     * Postavlja godinu proizvodnje vozila.
+     *
+     * @param godinaProizvodnje godina proizvodnje (1900-2100)
+     */
+    public void setGodinaProizvodnje(Integer godinaProizvodnje) { this.godinaProizvodnje = godinaProizvodnje; }
 
-    public String getTipGoriva() {
-        return tipGoriva;
-    }
+    /**
+     * Vraća tip goriva vozila.
+     *
+     * @return tip goriva
+     */
+    public String getTipGoriva() { return tipGoriva; }
 
-    public void setTipGoriva(String tipGoriva) {
-        this.tipGoriva = tipGoriva;
-    }
+    /**
+     * Postavlja tip goriva vozila.
+     *
+     * @param tipGoriva tip goriva (npr. Benzin, Dizel, Elektro)
+     */
+    public void setTipGoriva(String tipGoriva) { this.tipGoriva = tipGoriva; }
 
-    public VlasnikDto getVlasnik() {
-        return vlasnik;
-    }
+    /**
+     * Vraća vlasnika vozila.
+     *
+     * @return DTO objekat vlasnika
+     */
+    public VlasnikDto getVlasnik() { return vlasnik; }
 
-    public void setVlasnik(VlasnikDto vlasnik) {
-        this.vlasnik = vlasnik;
-    }
+    /**
+     * Postavlja vlasnika vozila.
+     *
+     * @param vlasnik DTO objekat vlasnika
+     */
+    public void setVlasnik(VlasnikDto vlasnik) { this.vlasnik = vlasnik; }
 
-    public List<ServisDto> getServisi() {
-        return servisi;
-    }
+    /**
+     * Vraća listu servisa vezanih za ovo vozilo.
+     *
+     * @return lista servisa
+     */
+    public List<ServisDto> getServisi() { return servisi; }
 
-    public void setServisi(List<ServisDto> servisi) {
-        this.servisi = servisi;
-    }
-    
+    /**
+     * Postavlja listu servisa vezanih za ovo vozilo.
+     *
+     * @param servisi lista servisa
+     */
+    public void setServisi(List<ServisDto> servisi) { this.servisi = servisi; }
 }

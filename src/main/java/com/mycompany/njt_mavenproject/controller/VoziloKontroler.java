@@ -1,14 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.njt_mavenproject.controller;
-
-/**
- *
- * @author Korisnik
- */
-
 
 import com.mycompany.njt_mavenproject.dto.impl.VoziloDto;
 import com.mycompany.njt_mavenproject.entity.impl.Vlasnik;
@@ -25,6 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * REST kontroler za upravljanje vozilima.
+ * Omogućava prijavljenom vlasniku da pregleda svoja vozila i dodaje nova.
+ *
+ * @author Bojana
+ */
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/vozilo")
@@ -33,12 +29,27 @@ public class VoziloKontroler {
     private final VoziloRepository vozila;
     private final VlasnikRepository vlasnici;
 
+    /**
+     * Konstruktor koji injektuje potrebne zavisnosti.
+     *
+     * @param vozila    repozitorijum za vozila
+     * @param vlasnici  repozitorijum za vlasnike
+     */
     public VoziloKontroler(VoziloRepository vozila, VlasnikRepository vlasnici) {
         this.vozila = vozila;
         this.vlasnici = vlasnici;
     }
 
-    // Accept oba naziva godine (front šalje godProizvodnje, tvoj DTO ima godinaProizvodnje)
+    /**
+     * DTO za kreiranje novog vozila.
+     * Prihvata oba naziva polja za godinu proizvodnje radi kompatibilnosti sa frontom.
+     *
+     * @param marka              marka vozila
+     * @param model              model vozila
+     * @param godProizvodnje     godina proizvodnje (naziv koji šalje front)
+     * @param godinaProizvodnje  godina proizvodnje (alternativni naziv)
+     * @param registracija       registarska oznaka vozila
+     */
     public record CreateVoziloReq(
             @NotBlank String marka,
             @NotBlank String model,
@@ -47,7 +58,12 @@ public class VoziloKontroler {
             @NotBlank String registracija
     ) {}
 
-    // ===== GET /api/vozilo/mine =====
+    /**
+     * Vraća listu vozila trenutno prijavljenog vlasnika.
+     *
+     * @param auth objekat autentifikacije iz Spring Security konteksta
+     * @return lista vozila prijavljenog vlasnika, ili 401 ako korisnik nije prijavljen
+     */
     @GetMapping("/mine")
     @Operation(summary = "Vrati vozila ulogovanog vlasnika")
     public ResponseEntity<List<VoziloDto>> getMine(Authentication auth) {
@@ -63,7 +79,13 @@ public class VoziloKontroler {
         return ResponseEntity.ok(list);
     }
 
-    // ===== POST /api/vozilo =====
+    /**
+     * Kreira novo vozilo za trenutno prijavljenog vlasnika.
+     *
+     * @param req  podaci novog vozila
+     * @param auth objekat autentifikacije iz Spring Security konteksta
+     * @return kreirano vozilo sa statusom 201, ili 401 ako korisnik nije prijavljen
+     */
     @PostMapping
     @Transactional
     @Operation(summary = "Kreiraj novo vozilo za ulogovanog vlasnika")
@@ -81,29 +103,37 @@ public class VoziloKontroler {
         Vozilo v = new Vozilo();
         v.setMarka(req.marka().trim());
         v.setModel(req.model().trim());
-        // prioritet dajemo godProizvodnje (front), fallback na godinaProizvodnje (DTO)
         Integer god = req.godProizvodnje() != null ? req.godProizvodnje() : req.godinaProizvodnje();
         v.setGodProizvodnje(god);
         v.setRegistracija(req.registracija().trim());
         v.setVlasnik(vlasnik);
 
-        vozila.save(v); // persist/merge
+        vozila.save(v);
 
         return new ResponseEntity<>(toDto(v), HttpStatus.CREATED);
     }
 
-    // ===== Mapper: Entity -> DTO (samo bitna polja za checkout) =====
+    /**
+     * Konvertuje entitet vozila u DTO objekat.
+     *
+     * @param v entitet vozila
+     * @return DTO objekat vozila
+     */
     private static VoziloDto toDto(Vozilo v) {
         VoziloDto dto = new VoziloDto();
         dto.setId(v.getId());
         dto.setMarka(n(v.getMarka()));
         dto.setModel(n(v.getModel()));
         dto.setRegistracija(n(v.getRegistracija()));
-        dto.setGodinaProizvodnje(v.getGodProizvodnje()); // DTO koristi "godinaProizvodnje"
-        // opcionalna polja ostaju null (kilometraza, tipGoriva, ...)
+        dto.setGodinaProizvodnje(v.getGodProizvodnje());
         return dto;
     }
 
+    /**
+     * Pomoćna metoda koja vraća zadatu vrednost ili null.
+     *
+     * @param s string vrednost
+     * @return ista string vrednost ili null
+     */
     private static String n(String s) { return s == null ? null : s; }
 }
-

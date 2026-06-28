@@ -1,15 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
- */
 package com.mycompany.njt_mavenproject.entity.impl;
 
 /**
+ * Enumeracija koja predstavlja moguće uloge korisnika u sistemu.
  *
- * @author Korisnik
+ * @author Bojana
  */
 public enum Uloga {
-    
-    ADMIN, VLASNIK;
-    
+
+    /** Administrator sistema sa punim pristupom svim funkcionalnostima. */
+    ADMIN,
+
+    /** Vlasnik vozila koji može da kreira i upravlja sopstvenim rezervacijama. */
+    VLASNIK
 }

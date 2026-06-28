@@ -1,36 +1,44 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.njt_mavenproject.entity.impl;
 
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.UUID;
 
-
 /**
+ * Entitet koji predstavlja token za verifikaciju email adrese korisnika.
+ * Token je jednokratan i ima ograničeno vreme trajanja.
  *
- * @author Korisnik
+ * @author Bojana
  */
 @Entity
 @Table(name = "verification_tokens")
-
 public class VerificationToken {
-    
-    @Id
-    private String token; // čuvamo UUID kao primarni ključ (string), znaci id nije long broj, vec je id sam token (random uuid string)
 
+    /** UUID token koji služi kao primarni ključ. */
+    @Id
+    private String token;
+
+    /** Vlasnik naloga čija se email adresa verifikuje. */
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "vlasnik_id", nullable = false, unique = true)
-    private Vlasnik vlasnik; // tvoj entitet umesto User
+    private Vlasnik vlasnik;
 
+    /** Tačan trenutak isteka tokena, nezavisan od vremenske zone korisnika. */
     @Column(nullable = false)
-    private Instant expiresAt;  //Instant je bolji jer je precizan bez obzira na vremensku zonu korisnika; tačan trenutak u vremenu, sa zonom
+    private Instant expiresAt;
 
+    /**
+     * Podrazumevani konstruktor.
+     */
     public VerificationToken() {}
 
-    /** Fabrika za kreiranje novog tokena koji važi TTL sekundi */
+    /**
+     * Fabrika metoda za kreiranje novog verifikacionog tokena.
+     *
+     * @param v          vlasnik naloga čija se email adresa verifikuje
+     * @param ttlSeconds vreme trajanja tokena u sekundama
+     * @return novi verifikacioni token
+     */
     public static VerificationToken of(Vlasnik v, long ttlSeconds) {
         VerificationToken t = new VerificationToken();
         t.token = UUID.randomUUID().toString();
@@ -39,33 +47,54 @@ public class VerificationToken {
         return t;
     }
 
+    /**
+     * Proverava da li je token istekao.
+     *
+     * @return true ako je token istekao, false ako je još uvek važeći
+     */
     public boolean isExpired() {
         return Instant.now().isAfter(expiresAt);
     }
 
-    // Getteri i setteri
-    public String getToken() {
-        return token;
-    }
+    /**
+     * Vraća vrednost tokena.
+     *
+     * @return UUID token
+     */
+    public String getToken() { return token; }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
+    /**
+     * Postavlja vrednost tokena.
+     *
+     * @param token UUID token
+     */
+    public void setToken(String token) { this.token = token; }
 
-    public Vlasnik getVlasnik() {
-        return vlasnik;
-    }
+    /**
+     * Vraća vlasnika naloga vezanog za ovaj token.
+     *
+     * @return vlasnik naloga
+     */
+    public Vlasnik getVlasnik() { return vlasnik; }
 
-    public void setVlasnik(Vlasnik vlasnik) {
-        this.vlasnik = vlasnik;
-    }
+    /**
+     * Postavlja vlasnika naloga vezanog za ovaj token.
+     *
+     * @param vlasnik vlasnik naloga
+     */
+    public void setVlasnik(Vlasnik vlasnik) { this.vlasnik = vlasnik; }
 
-    public Instant getExpiresAt() {
-        return expiresAt;
-    }
+    /**
+     * Vraća vreme isteka tokena.
+     *
+     * @return vreme isteka
+     */
+    public Instant getExpiresAt() { return expiresAt; }
 
-    public void setExpiresAt(Instant expiresAt) {
-        this.expiresAt = expiresAt;
-    }
-    
+    /**
+     * Postavlja vreme isteka tokena.
+     *
+     * @param expiresAt vreme isteka
+     */
+    public void setExpiresAt(Instant expiresAt) { this.expiresAt = expiresAt; }
 }

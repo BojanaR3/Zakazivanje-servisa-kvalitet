@@ -1,14 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.njt_mavenproject.controller;
-
-
-/**
- *
- * @author Korisnik
- */
 
 import com.mycompany.njt_mavenproject.dto.impl.ServisDto;
 import com.mycompany.njt_mavenproject.dto.impl.UslugaDto;
@@ -26,10 +16,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * REST kontroler za upravljanje servisima i cenovnikom.
+ * Omogućava pregled, kreiranje, ažuriranje i brisanje servisa,
+ * kao i upravljanje cenovnikom usluga po servisu.
+ *
+ * @author Bojana
+ */
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/servis")
@@ -39,6 +34,13 @@ public class ServisKontroler {
     private final ServisUslugaRepository cenovnikRepo;
     private final UslugaRepository uslugaRepo;
 
+    /**
+     * Konstruktor koji injektuje potrebne zavisnosti.
+     *
+     * @param servisServis servis za upravljanje servisima
+     * @param cenovnikRepo repozitorijum za cenovnik
+     * @param uslugaRepo   repozitorijum za usluge
+     */
     public ServisKontroler(ServisServis servisServis,
                            ServisUslugaRepository cenovnikRepo,
                            UslugaRepository uslugaRepo) {
@@ -47,8 +49,11 @@ public class ServisKontroler {
         this.uslugaRepo = uslugaRepo;
     }
 
-    // ===== postojeće rute =====
-
+    /**
+     * Vraća listu svih servisa.
+     *
+     * @return lista svih servisa
+     */
     @GetMapping
     @Operation(summary = "Retrieve all Servis entities.")
     @ApiResponse(responseCode = "200", content = {
@@ -58,6 +63,12 @@ public class ServisKontroler {
         return new ResponseEntity<>(servisServis.findAll(), HttpStatus.OK);
     }
 
+    /**
+     * Vraća servis sa zadatim ID-em.
+     *
+     * @param id jedinstveni identifikator servisa
+     * @return servis sa zadatim ID-em
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ServisDto> getById(
             @NotNull(message = "Should not be null or empty.")
@@ -69,6 +80,12 @@ public class ServisKontroler {
         }
     }
 
+    /**
+     * Kreira novi servis.
+     *
+     * @param servisDto podaci novog servisa
+     * @return kreirani servis sa statusom 201
+     */
     @PostMapping
     @Operation(summary = "Create a new servis entity.")
     @ApiResponse(responseCode = "201", content = {
@@ -83,6 +100,12 @@ public class ServisKontroler {
         }
     }
 
+    /**
+     * Briše servis sa zadatim ID-em.
+     *
+     * @param id jedinstveni identifikator servisa koji se briše
+     * @return poruka o uspešnom brisanju, ili 404 ako servis ne postoji
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable(value = "id") Long id) {
         try {
@@ -93,6 +116,13 @@ public class ServisKontroler {
         }
     }
 
+    /**
+     * Ažurira postojeći servis sa zadatim ID-em.
+     *
+     * @param id        jedinstveni identifikator servisa koji se ažurira
+     * @param servisDto novi podaci servisa
+     * @return ažurirani servis
+     */
     @PutMapping("/{id}")
     @Operation(summary = "Update an existing servis entity.")
     @ApiResponse(responseCode = "200", content = {
@@ -110,6 +140,12 @@ public class ServisKontroler {
         }
     }
 
+    /**
+     * Vraća listu usluga koje nudi servis sa zadatim ID-em.
+     *
+     * @param id jedinstveni identifikator servisa
+     * @return lista usluga servisa
+     */
     @GetMapping("/{id}/usluge")
     public ResponseEntity<List<UslugaDto>> getUslugeByServis(@PathVariable Long id) {
         try {
@@ -120,31 +156,54 @@ public class ServisKontroler {
         }
     }
 
-    // ===== CENOVNIK po servisu =====
-    // DTO za čitanje/prikaz na frontu
-    // DTO-i
-public record CenovnikItemDto(Long uslugaId, String naziv, Double cena) {}
-public record CenovnikUpsertReq(@NotNull Long uslugaId, @NotNull Double cena) {}
+    /**
+     * DTO za prikaz stavke cenovnika (usluga sa cenom).
+     *
+     * @param uslugaId jedinstveni identifikator usluge
+     * @param naziv    naziv usluge
+     * @param cena     cena usluge u servisu
+     */
+    public record CenovnikItemDto(Long uslugaId, String naziv, Double cena) {}
 
-@GetMapping("/{id}/cenovnik")
-public ResponseEntity<List<CenovnikItemDto>> getCenovnik(@PathVariable("id") Long servisId) {
-    var rows = cenovnikRepo.findByServisId(servisId); // samo postojeće
-    var out = rows.stream()
-            .map(su -> new CenovnikItemDto(su.getUsluga().getId(),
-                                           su.getUsluga().getNaziv(),
-                                           su.getCena()))
-            .toList();
-    return ResponseEntity.ok(out);
-}
+    /**
+     * DTO za kreiranje ili ažuriranje stavke cenovnika.
+     *
+     * @param uslugaId jedinstveni identifikator usluge
+     * @param cena     cena usluge u servisu
+     */
+    public record CenovnikUpsertReq(@NotNull Long uslugaId, @NotNull Double cena) {}
 
-@PutMapping("/{id}/cenovnik")
-public ResponseEntity<Void> upsertCenovnik(@PathVariable("id") Long servisId,
-                                           @RequestBody List<@Valid CenovnikUpsertReq> body) {
-    if (body == null) body = List.of();
-    for (var item : body) {
-        cenovnikRepo.upsert(servisId, item.uslugaId(), item.cena());
+    /**
+     * Vraća cenovnik servisa sa zadatim ID-em.
+     *
+     * @param servisId jedinstveni identifikator servisa
+     * @return lista stavki cenovnika za zadati servis
+     */
+    @GetMapping("/{id}/cenovnik")
+    public ResponseEntity<List<CenovnikItemDto>> getCenovnik(@PathVariable("id") Long servisId) {
+        var rows = cenovnikRepo.findByServisId(servisId);
+        var out = rows.stream()
+                .map(su -> new CenovnikItemDto(su.getUsluga().getId(),
+                                               su.getUsluga().getNaziv(),
+                                               su.getCena()))
+                .toList();
+        return ResponseEntity.ok(out);
     }
-    return ResponseEntity.noContent().build();
-}
 
+    /**
+     * Kreira ili ažurira cene usluga u cenovniku servisa.
+     *
+     * @param servisId jedinstveni identifikator servisa
+     * @param body     lista stavki cenovnika koje se kreiraju ili ažuriraju
+     * @return prazan odgovor sa statusom 204
+     */
+    @PutMapping("/{id}/cenovnik")
+    public ResponseEntity<Void> upsertCenovnik(@PathVariable("id") Long servisId,
+                                               @RequestBody List<@Valid CenovnikUpsertReq> body) {
+        if (body == null) body = List.of();
+        for (var item : body) {
+            cenovnikRepo.upsert(servisId, item.uslugaId(), item.cena());
+        }
+        return ResponseEntity.noContent().build();
+    }
 }

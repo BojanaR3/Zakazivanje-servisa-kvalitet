@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.njt_mavenproject.entity.impl;
 
 import com.mycompany.njt_mavenproject.entity.MyEntity;
@@ -9,52 +5,61 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 
 /**
+ * Entitet koji predstavlja jednu stavku u okviru rezervacije.
+ * Sadrži informacije o usluzi, količini i zaključanoj ceni u trenutku kreiranja rezervacije.
  *
- * @author Korisnik
+ * @author Bojana
  */
 @Entity
-@Table(name="stavkarezervacije")
+@Table(name = "stavkarezervacije")
+public class StavkaRezervacije implements MyEntity {
 
-public class StavkaRezervacije implements MyEntity{
-    
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    /** Jedinstveni identifikator stavke rezervacije. */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** Količina usluge u stavci, podrazumevano 1. */
     @Column(nullable = false)
     private Integer kolicina = 1;
 
-    // zaključana cena po jedinici u trenutku pravljenja rezervacije
+    /** Zaključana jedinična cena usluge u trenutku kreiranja rezervacije. */
     @Column(nullable = false)
-    private Double unitPrice;  
+    private Double unitPrice;
 
-    // procentualni popust 0–100 (ako želiš fiksni iznos, vidi ispod)
-    //@Column(nullable = false)
-    //private Double popustProcenat = 0.0;
-
+    /** Rezervacija kojoj ova stavka pripada. */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="rezervacija_id", nullable = false)
+    @JoinColumn(name = "rezervacija_id", nullable = false)
     private Rezervacija rezervacija;
 
+    /** Usluga koja se nalazi u ovoj stavci. */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="usluga_id", nullable = false)
+    @JoinColumn(name = "usluga_id", nullable = false)
     private Usluga usluga;
 
-    /** Konačna suma za ovu stavku: kolicina * unitPrice * (1 - popust%) 
-    public Double getUkupno(){
-        double osnova = (unitPrice != null ? unitPrice : 0.0) * (kolicina != null ? kolicina : 0);
-        double faktorPopusta = 1.0 - (popustProcenat != null ? popustProcenat : 0.0) / 100.0;
-        return osnova * faktorPopusta;
-    }
-    **/
-    
-    public Double getUkupno(){
-    	if (unitPrice == null || kolicina == null) return 0.0;
-    	return unitPrice * kolicina;
-    }
-    
-    public StavkaRezervacije() {
+    /**
+     * Izračunava ukupan iznos stavke kao proizvod jedinične cene i količine.
+     *
+     * @return ukupan iznos stavke, ili 0.0 ako cena ili količina nisu postavljeni
+     */
+    public Double getUkupno() {
+        if (unitPrice == null || kolicina == null) return 0.0;
+        return unitPrice * kolicina;
     }
 
+    /**
+     * Podrazumevani konstruktor.
+     */
+    public StavkaRezervacije() {}
+
+    /**
+     * Konstruktor sa osnovnim parametrima.
+     *
+     * @param id         jedinstveni identifikator stavke
+     * @param unitPrice  jedinična cena usluge
+     * @param rezervacija rezervacija kojoj stavka pripada
+     * @param usluga     usluga u stavci
+     */
     public StavkaRezervacije(Long id, Double unitPrice, Rezervacija rezervacija, Usluga usluga) {
         this.id = id;
         this.unitPrice = unitPrice;
@@ -62,57 +67,73 @@ public class StavkaRezervacije implements MyEntity{
         this.usluga = usluga;
     }
 
+    /**
+     * Vraća ID stavke rezervacije.
+     *
+     * @return jedinstveni identifikator
+     */
+    public Long getId() { return id; }
 
-    public Long getId() {
-        return id;
-    }
+    /**
+     * Postavlja ID stavke rezervacije.
+     *
+     * @param id jedinstveni identifikator
+     */
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    /**
+     * Vraća količinu usluge u stavci.
+     *
+     * @return količina
+     */
+    public Integer getKolicina() { return kolicina; }
 
-    public Integer getKolicina() {
-        return kolicina;
-    }
+    /**
+     * Postavlja količinu usluge u stavci.
+     *
+     * @param kolicina količina (minimum 1)
+     */
+    public void setKolicina(Integer kolicina) { this.kolicina = kolicina; }
 
-    public void setKolicina(Integer kolicina) {
-        this.kolicina = kolicina;
-    }
+    /**
+     * Vraća zaključanu jediničnu cenu usluge.
+     *
+     * @return jedinična cena
+     */
+    public Double getUnitPrice() { return unitPrice; }
 
-    public Double getUnitPrice() {
-        return unitPrice;
-    }
+    /**
+     * Postavlja zaključanu jediničnu cenu usluge.
+     *
+     * @param unitPrice jedinična cena usluge
+     */
+    public void setUnitPrice(Double unitPrice) { this.unitPrice = unitPrice; }
 
-    public void setUnitPrice(Double unitPrice) {
-        this.unitPrice = unitPrice;
-    }
+    /**
+     * Vraća rezervaciju kojoj ova stavka pripada.
+     *
+     * @return rezervacija
+     */
+    public Rezervacija getRezervacija() { return rezervacija; }
 
-    //public Double getPopustProcenat() {
-       // return popustProcenat;
-    //}
+    /**
+     * Postavlja rezervaciju kojoj ova stavka pripada.
+     *
+     * @param rezervacija rezervacija
+     */
+    public void setRezervacija(Rezervacija rezervacija) { this.rezervacija = rezervacija; }
 
-    //public void setPopustProcenat(Double popustProcenat) {
-       // this.popustProcenat = popustProcenat;
-    //}
+    /**
+     * Vraća uslugu koja se nalazi u ovoj stavci.
+     *
+     * @return usluga
+     */
+    public Usluga getUsluga() { return usluga; }
 
-    
-
-    public Rezervacija getRezervacija() {
-        return rezervacija;
-    }
-
-    public void setRezervacija(Rezervacija rezervacija) {
-        this.rezervacija = rezervacija;
-    }
-
-    public Usluga getUsluga() {
-        return usluga;
-    }
-
-    public void setUsluga(Usluga usluga) {
-        this.usluga = usluga;
-    }
-    
-    
-    
+    /**
+     * Postavlja uslugu u stavci.
+     *
+     * @param usluga usluga rezervacije
+     */
+    public void setUsluga(Usluga usluga) { this.usluga = usluga; }
 }

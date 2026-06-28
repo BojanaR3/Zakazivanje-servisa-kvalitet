@@ -1,30 +1,46 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.njt_mavenproject.dto.impl;
 
 import jakarta.validation.constraints.*;
 
 /**
+ * DTO klasa koja predstavlja zahtev za prijavu korisnika.
+ * Sadrži korisničko ime i lozinku potrebne za autentifikaciju.
  *
- * @author Korisnik
+ * @author Bojana
  */
 public class LoginRequest {
-    
-    @NotBlank private String username;
-    @NotBlank private String lozinka;
 
-    public String getUsername(){ return username; }
-    public void setUsername(String username){ this.username = username; }
+    @NotBlank
+    private String username;
 
-    public String getLozinka() {
-        return lozinka;
-    }
+    @NotBlank
+    private String lozinka;
 
-    public void setLozinka(String lozinka) {
-        this.lozinka = lozinka;
-    }
-    
-    
+    /**
+     * Vraća korisničko ime.
+     *
+     * @return korisničko ime
+     */
+    public String getUsername() { return username; }
+
+    /**
+     * Postavlja korisničko ime.
+     *
+     * @param username korisničko ime
+     */
+    public void setUsername(String username) { this.username = username; }
+
+    /**
+     * Vraća lozinku korisnika.
+     *
+     * @return lozinka
+     */
+    public String getLozinka() { return lozinka; }
+
+    /**
+     * Postavlja lozinku korisnika.
+     *
+     * @param lozinka lozinka korisnika
+     */
+    public void setLozinka(String lozinka) { this.lozinka = lozinka; }
 }

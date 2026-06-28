@@ -1,15 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
- */
 package com.mycompany.njt_mavenproject.entity.impl;
 
 /**
+ * Enumeracija koja predstavlja moguće statuse rezervacije.
  *
- * @author Korisnik
+ * @author Bojana
  */
 public enum StatusRezervacije {
-    
-    CREATED, CONFIRMED, CANCELED, COMPLETED;
-    
+
+    /** Rezervacija je kreirana i čeka potvrdu. */
+    CREATED,
+
+    /** Rezervacija je potvrđena od strane servisa. */
+    CONFIRMED,
+
+    /** Rezervacija je otkazana. */
+    CANCELED,
+
+    /** Rezervacija je završena. */
+    COMPLETED
 }
