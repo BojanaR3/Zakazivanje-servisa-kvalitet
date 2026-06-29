@@ -1,0 +1,13 @@
+com.mycompany.njt_mavenproject
+com.mycompany.njt_mavenproject.config
+com.mycompany.njt_mavenproject.controller
+com.mycompany.njt_mavenproject.dto
+com.mycompany.njt_mavenproject.dto.impl
+com.mycompany.njt_mavenproject.entity
+com.mycompany.njt_mavenproject.entity.impl
+com.mycompany.njt_mavenproject.mapper
+com.mycompany.njt_mavenproject.mapper.impl
+com.mycompany.njt_mavenproject.repository
+com.mycompany.njt_mavenproject.repository.impl
+com.mycompany.njt_mavenproject.security
+com.mycompany.njt_mavenproject.servis
