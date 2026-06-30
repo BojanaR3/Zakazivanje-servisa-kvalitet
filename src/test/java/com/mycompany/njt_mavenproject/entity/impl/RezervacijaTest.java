@@ -5,6 +5,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ class RezervacijaTest {
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown() {
         r = null;
     }
 
@@ -36,7 +37,7 @@ class RezervacijaTest {
 
     @Test
     void testRezervacijaLongLocalDateTimeDoubleStatusRezervacijeVlasnikVoziloServis() {
-        LocalDateTime datum = LocalDateTime.of(2025, 6, 1, 10, 0);
+        LocalDateTime datum = LocalDateTime.of(2025, Month.JUNE, 1, 10, 0);
         Vlasnik vlasnik = new Vlasnik(1L);
         Vozilo vozilo = new Vozilo(1L);
         Servis servis = new Servis(1L);
@@ -60,7 +61,7 @@ class RezervacijaTest {
 
     @Test
     void testPrePersistDatumNijeNull() {
-        LocalDateTime datum = LocalDateTime.of(2025, 6, 1, 10, 0);
+        LocalDateTime datum = LocalDateTime.of(2025, Month.JUNE, 1, 10, 0);
         r.setDatum(datum);
         r.prePersist();
         assertEquals(datum, r.getDatum());
@@ -128,10 +129,10 @@ class RezervacijaTest {
         r.setId(1L);
         assertEquals(1L, r.getId());
     }
-
+ 
     @Test
     void testSetDatum() {
-        LocalDateTime datum = LocalDateTime.of(2025, 6, 1, 10, 0);
+        LocalDateTime datum = LocalDateTime.of(2025, Month.JUNE, 1, 10, 0);
         r.setDatum(datum);
         assertEquals(datum, r.getDatum());
     }

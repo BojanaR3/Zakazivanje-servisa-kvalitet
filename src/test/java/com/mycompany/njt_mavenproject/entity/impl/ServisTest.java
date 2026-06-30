@@ -15,7 +15,7 @@ class ServisTest {
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown()  {
         s = null;
     }
 

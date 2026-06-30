@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,13 +57,13 @@ class RezervacijaServiceTest {
         rezervacija = new Rezervacija(1L);
         rezervacija.setVlasnik(vlasnik);
         rezervacija.setServis(servis);
-        rezervacija.setDatum(LocalDateTime.of(2025, 6, 2, 10, 0)); // ponedeljak
+        rezervacija.setDatum(LocalDateTime.of(2025, Month.JUNE, 2, 10, 0)); // ponedeljak
         rezervacija.setStatus(StatusRezervacije.CREATED);
         rezervacija.setTrajanjeMin(60);
 
         rezervacijaDto = new RezervacijaDto();
         rezervacijaDto.setId(1L);
-        rezervacijaDto.setDatum(LocalDateTime.of(2025, 6, 2, 10, 0));
+        rezervacijaDto.setDatum(LocalDateTime.of(2025, Month.JUNE, 2, 10, 0));
         rezervacijaDto.setStatus(StatusRezervacije.CREATED);
     }
 
@@ -223,7 +224,7 @@ class RezervacijaServiceTest {
 
     @Test
     void testRescheduleMy() throws Exception {
-        LocalDateTime noviDatum = LocalDateTime.of(2025, 6, 3, 10, 0);
+        LocalDateTime noviDatum = LocalDateTime.of(2025, Month.JUNE, 3, 10, 0);
         when(vlasnici.findByUsername("marko123")).thenReturn(vlasnik);
         when(repo.findById(1L)).thenReturn(rezervacija);
         when(repo.existsOverlap(anyLong(), any(), any())).thenReturn(false);
@@ -245,7 +246,7 @@ class RezervacijaServiceTest {
 
     @Test
     void testRescheduleMyTerminZauzet() throws Exception {
-        LocalDateTime noviDatum = LocalDateTime.of(2025, 6, 3, 10, 0);
+        LocalDateTime noviDatum = LocalDateTime.of(2025, Month.JUNE, 3, 10, 0);
         when(vlasnici.findByUsername("marko123")).thenReturn(vlasnik);
         when(repo.findById(1L)).thenReturn(rezervacija);
         when(repo.existsOverlap(anyLong(), any(), any())).thenReturn(true);

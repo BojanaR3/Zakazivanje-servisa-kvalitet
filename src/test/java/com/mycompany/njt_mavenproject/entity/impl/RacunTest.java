@@ -5,6 +5,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
+import java.time.Month;
 
 class RacunTest {
 
@@ -46,7 +47,7 @@ class RacunTest {
 
     @Test
     void testSetDatumIzdavanja() {
-        LocalDateTime datum = LocalDateTime.of(2025, 6, 1, 10, 0);
+        LocalDateTime datum = LocalDateTime.of(2025, Month.JUNE, 1, 10, 0);
         r.setDatumIzdavanja(datum);
         assertEquals(datum, r.getDatumIzdavanja());
     }

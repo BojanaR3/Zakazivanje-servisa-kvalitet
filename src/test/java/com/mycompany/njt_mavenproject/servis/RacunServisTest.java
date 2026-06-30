@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,7 +40,7 @@ class RacunServisTest {
     void setUp() {
         racun = new Racun(1L);
         racun.setBroj("R-001");
-        racun.setDatumIzdavanja(LocalDateTime.of(2025, 6, 1, 10, 0));
+        racun.setDatumIzdavanja(LocalDateTime.of(2025, Month.JUNE, 1, 10, 0));
         racun.setUkupanIznos(1500.0);
         racun.setStatusPlacanja("NEPLACENO");
 
