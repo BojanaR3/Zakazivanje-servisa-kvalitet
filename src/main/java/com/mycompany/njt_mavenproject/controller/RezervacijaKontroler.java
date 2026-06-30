@@ -26,6 +26,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 @RequestMapping("/api/rezervacija")
 public class RezervacijaKontroler {
 
+    private static final String GRESKA_PREFIX = "Greška: ";
+
     private final RezervacijaService service;
 
     /**
@@ -89,7 +91,7 @@ public class RezervacijaKontroler {
         } catch (IllegalStateException dup) {
             return new ResponseEntity<>(dup.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception ex) {
-            return new ResponseEntity<>("Greška: " + ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(GRESKA_PREFIX + ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -136,7 +138,7 @@ public class RezervacijaKontroler {
         } catch (IllegalStateException ise) {
             return new ResponseEntity<>(ise.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception ex) {
-            return new ResponseEntity<>("Greška: " + ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(GRESKA_PREFIX + ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -160,7 +162,7 @@ public class RezervacijaKontroler {
         } catch (IllegalStateException clash) {
             return new ResponseEntity<>(clash.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception ex) {
-            return new ResponseEntity<>("Greška: " + ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(GRESKA_PREFIX + ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

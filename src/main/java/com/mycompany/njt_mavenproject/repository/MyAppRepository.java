@@ -3,26 +3,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
 package com.mycompany.njt_mavenproject.repository;
-
 import java.util.List;
-
 /**
  * Generički interfejs koji definiše osnovne CRUD operacije
  * za sve repozitorijume u aplikaciji.
  *
- * @param <E>  tip entiteta sa kojim repozitorijum radi
+ * @param <T>  tip entiteta sa kojim repozitorijum radi
  * @param <ID> tip identifikatora entiteta
  * @author Bojana
  */
-public interface MyAppRepository<E, ID> {
-
+public interface MyAppRepository<T, ID> {
     /**
      * Vraća listu svih entiteta iz baze podataka.
      *
      * @return lista svih entiteta
      */
-    List<E> findAll();
-
+    List<T> findAll();
     /**
      * Pronalazi entitet na osnovu prosleđenog identifikatora.
      *
@@ -30,15 +26,13 @@ public interface MyAppRepository<E, ID> {
      * @return pronađeni entitet
      * @throws Exception ako entitet sa datim ID-jem ne postoji
      */
-    E findById(ID id) throws Exception;
-
+    T findById(ID id) throws Exception;
     /**
      * Čuva novi entitet ili ažurira postojeći u bazi podataka.
      *
      * @param entity entitet koji se čuva
      */
-    void save(E entity);
-
+    void save(T entity);
     /**
      * Briše entitet sa datim identifikatorom iz baze podataka.
      *

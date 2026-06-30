@@ -30,7 +30,9 @@ public class VerificationToken {
     /**
      * Podrazumevani konstruktor.
      */
-    public VerificationToken() {}
+    public VerificationToken() {
+    	// Prazan konstruktor zahteva JPA specifikacija za entitete
+    }
 
     /**
      * Fabrika metoda za kreiranje novog verifikacionog tokena.

@@ -34,7 +34,9 @@ public class PasswordResetToken {
     /**
      * Podrazumevani konstruktor.
      */
-    public PasswordResetToken() {}
+    public PasswordResetToken() {
+    	 // Prazan konstruktor zahteva JPA specifikacija za entitete
+    }
 
     /**
      * Fabrika metoda za kreiranje novog tokena za resetovanje lozinke.
