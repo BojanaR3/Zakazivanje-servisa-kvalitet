@@ -159,7 +159,7 @@ class RezervacijaServiceTest {
         when(repo.findById(1L)).thenReturn(rezervacija);
         when(mapper.toDto(rezervacija)).thenReturn(rezervacijaDto);
 
-        RezervacijaDto rezultat = rezervacijaService.updateStatus(1L, StatusRezervacije.CONFIRMED);
+        rezervacijaService.updateStatus(1L, StatusRezervacije.CONFIRMED);
 
         assertEquals(StatusRezervacije.CONFIRMED, rezervacija.getStatus());
         verify(repo, times(1)).save(rezervacija);

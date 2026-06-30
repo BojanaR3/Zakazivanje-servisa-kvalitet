@@ -130,7 +130,7 @@ class RacunServisTest {
         when(repo.findById(1L)).thenReturn(racun);
         when(mapper.toDto(racun)).thenReturn(racunDto);
 
-        RacunDto rezultat = racunServis.updateStatus(1L, "PLACENO");
+        racunServis.updateStatus(1L, "PLACENO");
 
         assertEquals("PLACENO", racun.getStatusPlacanja());
         verify(repo, times(1)).save(racun);
