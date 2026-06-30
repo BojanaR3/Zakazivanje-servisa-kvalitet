@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Servis koji upravlja poslovnom logikom vezanom za rezervacije.
@@ -72,7 +71,7 @@ public class RezervacijaService {
      * @return lista DTO objekata svih rezervacija
      */
     public List<RezervacijaDto> findAll() {
-        return repo.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
+        return repo.findAll().stream().map(mapper::toDto).toList();
     }
 
     /**
@@ -82,7 +81,7 @@ public class RezervacijaService {
      * @return lista DTO objekata rezervacija datog vlasnika
      */
     public List<RezervacijaDto> findMine(Long vlasnikId) {
-        return repo.findByVlasnikId(vlasnikId).stream().map(mapper::toDto).collect(Collectors.toList());
+        return repo.findByVlasnikId(vlasnikId).stream().map(mapper::toDto).toList();
     }
 
     /**

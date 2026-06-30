@@ -8,7 +8,6 @@ import com.mycompany.njt_mavenproject.repository.impl.UslugaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Servis koji upravlja poslovnom logikom vezanom za usluge.
@@ -51,7 +50,7 @@ public class UslugaServis {
      * @return lista DTO objekata svih usluga
      */
     public List<UslugaDto> findAll() {
-        return usluge.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
+        return usluge.findAll().stream().map(mapper::toDto).toList();
     }
 
     /**

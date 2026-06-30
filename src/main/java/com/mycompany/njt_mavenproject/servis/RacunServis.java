@@ -11,7 +11,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Servis koji upravlja poslovnom logikom vezanom za račune.
@@ -50,7 +49,7 @@ public class RacunServis {
      * @return lista DTO objekata svih računa
      */
     public List<RacunDto> findAll() {
-        return repo.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
+        return repo.findAll().stream().map(mapper::toDto).toList();
     }
 
     /**

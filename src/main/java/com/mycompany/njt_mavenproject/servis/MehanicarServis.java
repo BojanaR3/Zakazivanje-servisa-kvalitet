@@ -10,7 +10,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Servis koji upravlja poslovnom logikom vezanom za mehaničare.
@@ -49,7 +48,7 @@ public class MehanicarServis {
      * @return lista DTO objekata svih mehaničara
      */
     public List<MehanicarDto> findAll() {
-        return repo.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
+        return repo.findAll().stream().map(mapper::toDto).toList();
     }
 
     /**
@@ -59,7 +58,7 @@ public class MehanicarServis {
      * @return lista DTO objekata mehaničara iz traženog servisa
      */
     public List<MehanicarDto> findByServis(Long servisId) {
-        return repo.findByServisId(servisId).stream().map(mapper::toDto).collect(Collectors.toList());
+        return repo.findByServisId(servisId).stream().map(mapper::toDto).toList();
     }
 
     /**
