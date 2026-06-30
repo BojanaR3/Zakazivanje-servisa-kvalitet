@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -88,7 +89,7 @@ public class RacunServis {
         if (dto.getRezervacijaId() != null)
             r.setRezervacija(em.getReference(Rezervacija.class, dto.getRezervacijaId()));
         if (r.getDatumIzdavanja() == null)
-            r.setDatumIzdavanja(LocalDateTime.now());
+            r.setDatumIzdavanja(LocalDateTime.now(Clock.systemDefaultZone()));
         repo.save(r);
         return mapper.toDto(r);
     }

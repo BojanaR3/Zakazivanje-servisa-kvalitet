@@ -3,6 +3,7 @@ package com.mycompany.njt_mavenproject.entity.impl;
 import com.mycompany.njt_mavenproject.entity.MyEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +104,7 @@ public class Rezervacija implements MyEntity {
      */
     @PrePersist
     public void prePersist() {
-        if (datum == null) datum = LocalDateTime.now();
+        if (datum == null) datum = LocalDateTime.now(Clock.systemDefaultZone());
         recalcTotal();
         if (trajanjeMin == null) trajanjeMin = 0;
     }
