@@ -216,7 +216,7 @@ public class RezervacijaService {
      * @return {@code true} ako je sreda, {@code false} u suprotnom
      */
     private boolean isWednesday(LocalDateTime dt) {
-        return dt != null && dt.getDayOfWeek() == DayOfWeek.WEDNESDAY;
+        return dt != null && DayOfWeek.WEDNESDAY.equals(dt.getDayOfWeek());
     }
 
     /**
