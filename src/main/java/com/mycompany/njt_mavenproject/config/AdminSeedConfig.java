@@ -3,6 +3,8 @@ package com.mycompany.njt_mavenproject.config;
 import com.mycompany.njt_mavenproject.entity.impl.Uloga;
 import com.mycompany.njt_mavenproject.entity.impl.Vlasnik;
 import com.mycompany.njt_mavenproject.repository.impl.VlasnikRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @Configuration
 public class AdminSeedConfig {
+
+    private static final Logger logger = LoggerFactory.getLogger(AdminSeedConfig.class);
 
     /**
      * Kreira podrazumevanog ADMIN korisnika pri pokretanju aplikacije.
@@ -31,11 +35,9 @@ public class AdminSeedConfig {
             final String adminUsername = "admin";
             final String adminEmail    = "admin@lokal.host";
             final String adminPass     = "admin123";
-
             if (vlasnikRepo.existsByUsername(adminUsername) || vlasnikRepo.existsByEmail(adminEmail)) {
                 return;
             }
-
             Vlasnik a = new Vlasnik();
             a.setUsername(adminUsername);
             a.setEmail(adminEmail);
@@ -44,9 +46,8 @@ public class AdminSeedConfig {
             a.setLozinka(encoder.encode(adminPass));
             a.setUloga(Uloga.ADMIN);
             a.setEnabled(true);
-
             vlasnikRepo.save(a);
-            System.out.println("✅ Kreiran podrazumevani ADMIN korisnik: " + adminUsername + " / " + adminEmail);
+            logger.info("Kreiran podrazumevani ADMIN korisnik: {} / {}", adminUsername, adminEmail);
         };
     }
 }
