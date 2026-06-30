@@ -36,7 +36,7 @@ class RacunServisTest {
     RacunDto racunDto;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         racun = new Racun(1L);
         racun.setBroj("R-001");
         racun.setDatumIzdavanja(LocalDateTime.of(2025, 6, 1, 10, 0));
@@ -51,7 +51,7 @@ class RacunServisTest {
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown(){
         racun = null;
         racunDto = null;
     }

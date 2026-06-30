@@ -10,12 +10,12 @@ class StavkaRezervacijeTest {
     StavkaRezervacije s;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         s = new StavkaRezervacije();
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown(){
         s = null;
     }
 

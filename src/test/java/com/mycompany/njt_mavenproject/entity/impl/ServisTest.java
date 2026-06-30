@@ -10,7 +10,7 @@ class ServisTest {
     Servis s;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         s = new Servis();
     }
 

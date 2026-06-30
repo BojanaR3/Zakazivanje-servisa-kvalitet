@@ -48,7 +48,7 @@ class RezervacijaServiceTest {
     RezervacijaDto rezervacijaDto;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         vlasnik = new Vlasnik(1L);
         vlasnik.setUsername("marko123");
 
@@ -67,7 +67,7 @@ class RezervacijaServiceTest {
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown() {
         vlasnik = null;
         rezervacija = null;
         rezervacijaDto = null;

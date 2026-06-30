@@ -10,12 +10,12 @@ class UslugaTest {
     Usluga u;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         u = new Usluga();
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown() {
         u = null;
     }
 

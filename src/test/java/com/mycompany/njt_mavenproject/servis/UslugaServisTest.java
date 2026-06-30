@@ -39,13 +39,13 @@ class UslugaServisTest {
     UslugaDto uslugaDto;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         usluga = new Usluga(1L, "Zamena ulja", 30, "min");
         uslugaDto = new UslugaDto(1L, "Zamena ulja", 30, "min");
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown() {
         usluga = null;
         uslugaDto = null;
     }

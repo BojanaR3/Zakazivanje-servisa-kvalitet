@@ -64,7 +64,7 @@ class AuthServiceTest {
     LoginRequest loginRequest;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         vlasnik = new Vlasnik(1L, "Marko", "Markovic", "marko@gmail.com", "marko123", "hash123");
         vlasnik.setUloga(Uloga.VLASNIK);
         vlasnik.setEnabled(true);
@@ -89,7 +89,7 @@ class AuthServiceTest {
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown() {
         vlasnik = null;
         vlasnikDto = null;
         registerRequest = null;

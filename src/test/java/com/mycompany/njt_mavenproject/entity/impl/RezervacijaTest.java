@@ -13,7 +13,7 @@ class RezervacijaTest {
     Rezervacija r;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         r = new Rezervacija();
     }
 

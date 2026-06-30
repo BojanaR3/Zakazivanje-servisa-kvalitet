@@ -12,12 +12,12 @@ class VoziloTest {
     Vozilo v;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         v = new Vozilo();
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown() {
         v = null;
     }
 

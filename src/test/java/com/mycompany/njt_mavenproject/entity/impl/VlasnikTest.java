@@ -12,12 +12,12 @@ class VlasnikTest {
     Vlasnik v;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         v = new Vlasnik();
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown() {
         v = null;
     }
 

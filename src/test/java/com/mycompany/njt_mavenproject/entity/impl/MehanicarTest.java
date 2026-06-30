@@ -10,12 +10,12 @@ class MehanicarTest {
     Mehanicar m;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         m = new Mehanicar();
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown() {
         m = null;
     }
 

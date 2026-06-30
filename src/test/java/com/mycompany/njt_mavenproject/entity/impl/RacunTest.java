@@ -11,12 +11,12 @@ class RacunTest {
     Racun r;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         r = new Racun();
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown() {
         r = null;
     }
 

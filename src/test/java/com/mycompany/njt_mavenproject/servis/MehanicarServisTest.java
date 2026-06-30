@@ -35,7 +35,7 @@ class MehanicarServisTest {
     MehanicarDto mehanicarDto;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         mehanicar = new Mehanicar(1L);
         mehanicar.setIme("Marko");
         mehanicar.setPrezime("Markovic");
@@ -51,7 +51,7 @@ class MehanicarServisTest {
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown(){
         mehanicar = null;
         mehanicarDto = null;
     }
