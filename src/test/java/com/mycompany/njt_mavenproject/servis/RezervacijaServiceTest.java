@@ -259,7 +259,7 @@ class RezervacijaServiceTest {
     @Test
     void testRescheduleMyNijeCreated() throws Exception {
         rezervacija.setStatus(StatusRezervacije.CONFIRMED);
-        LocalDateTime noviDatum = LocalDateTime.of(2025, 6, 3, 10, 0);
+        LocalDateTime noviDatum = LocalDateTime.of(2025, Month.JUNE, 3, 10, 0);
         when(vlasnici.findByUsername("marko123")).thenReturn(vlasnik);
         when(repo.findById(1L)).thenReturn(rezervacija);
 
