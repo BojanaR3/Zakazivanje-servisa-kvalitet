@@ -5,6 +5,8 @@
 package com.mycompany.njt_mavenproject.security;
 
 import com.mycompany.njt_mavenproject.entity.impl.Vlasnik;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.mycompany.njt_mavenproject.repository.impl.VlasnikRepository;
 import java.util.List;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Service;
 public class AppUserDetailsService implements UserDetailsService {
 
     private final VlasnikRepository users;
+    private static final Logger logger = LoggerFactory.getLogger(AppUserDetailsService.class);
 
     /**
      * Konstruktor koji injektuje repozitorijum vlasnika.
