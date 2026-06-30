@@ -47,8 +47,8 @@ public class AppUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Vlasnik u = users.findByUsername(username);
         if (u == null) throw new UsernameNotFoundException("Not found");
-        System.out.println("ULOGA IZ BAZE: " + u.getUloga());
-        System.out.println("AUTHORITY: ROLE_" + u.getUloga().name());
+        logger.info("ULOGA IZ BAZE: {}", u.getUloga());
+        logger.info("AUTHORITY: ROLE_{}", u.getUloga().name());
         return new org.springframework.security.core.userdetails.User(
                 u.getUsername(),
                 u.getLozinka(),
