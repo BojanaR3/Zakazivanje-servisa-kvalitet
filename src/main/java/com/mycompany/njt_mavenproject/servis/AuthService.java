@@ -12,6 +12,7 @@ import com.mycompany.njt_mavenproject.entity.impl.PasswordResetToken;
 import com.mycompany.njt_mavenproject.entity.impl.Uloga;
 import com.mycompany.njt_mavenproject.entity.impl.VerificationToken;
 import com.mycompany.njt_mavenproject.entity.impl.Vlasnik;
+import com.mycompany.njt_mavenproject.exception.EntityUpdateException;
 import com.mycompany.njt_mavenproject.exception.RegistrationException;
 import com.mycompany.njt_mavenproject.mapper.impl.VlasnikMapper;
 import com.mycompany.njt_mavenproject.repository.impl.PasswordResetTokenRepository;
@@ -214,12 +215,12 @@ public class AuthService {
      *
      * @param token    string vrednost tokena za resetovanje lozinke
      * @param password nova lozinka u čistom tekstu koja će biti enkodovana
-     * @throws RuntimeException ako je token neispravan, iskorišćen ili istekao
+     * @throws EntityUpdateException ako je token neispravan, iskorišćen ili istekao
      */
     public void resetPassword(String token, String password) {
         PasswordResetToken t = resetTokens.find(token);
         if (t == null || t.isUsed() || t.isExpired()) {
-            throw new RuntimeException("Neispravan ili istekao token.");
+            throw new EntityUpdateException("Neispravan ili istekao token.");
         }
         Vlasnik u = t.getVlasnik();
         u.setLozinka(encoder.encode(password));
