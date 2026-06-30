@@ -20,7 +20,6 @@ import com.mycompany.njt_mavenproject.entity.impl.Vozilo;
 import com.mycompany.njt_mavenproject.mapper.DtoEntityMapper;
 import org.springframework.stereotype.Component;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class RezervacijaMapper implements DtoEntityMapper<RezervacijaDto, Rezervacija> {
@@ -56,7 +55,7 @@ public class RezervacijaMapper implements DtoEntityMapper<RezervacijaDto, Rezerv
         List<StavkaRezervacijeDto> items = e.getStavke()
                 .stream()
                 .map(itemMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
         d.setStavke(items);
         return d;
     }

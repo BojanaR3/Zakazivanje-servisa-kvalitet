@@ -24,17 +24,16 @@ public class UslugaMapper implements DtoEntityMapper<UslugaDto, Usluga> {
      * @param e entitet usluge koji se konvertuje
      * @return DTO objekat sa podacima usluge
      */
-    @Override
-    public UslugaDto toDto(Usluga e) {
-        UslugaDto d = new UslugaDto(
-                e.getId(),
-                e.getNaziv(),
-                e.getTrajanje(),
-                e.getJedinicaMere()
-        );
-        // veze sa servisima idu preko /cenovnik endpointa
-        return d;
-    }
+	@Override
+	public UslugaDto toDto(Usluga e) {
+	    // veze sa servisima idu preko /cenovnik endpointa
+	    return new UslugaDto(
+	            e.getId(),
+	            e.getNaziv(),
+	            e.getTrajanje(),
+	            e.getJedinicaMere()
+	    );
+	}
 
     /**
      * Konvertuje DTO objekat u entitet usluge.

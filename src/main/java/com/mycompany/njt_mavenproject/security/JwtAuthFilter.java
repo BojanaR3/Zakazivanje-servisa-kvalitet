@@ -68,7 +68,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
         String token = auth.substring(7);
         String username = null;
-        try { username = jwt.extractUsername(token); } catch (Exception ignored) {}
+        try {
+            username = jwt.extractUsername(token);
+        } catch (Exception e) {
+            logger.debug("Neuspesno izvlacenje korisnickog imena iz tokena: {}", e.getMessage());
+        }
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails ud = uds.loadUserByUsername(username);
             if (jwt.isValid(token, ud)) {
