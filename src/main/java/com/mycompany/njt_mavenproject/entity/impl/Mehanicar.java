@@ -9,14 +9,14 @@ import jakarta.persistence.*;
  * @author Bojana
  */
 @Entity
-@Table(name = "mehaničar")
+@Table(name = "mehanicar")
 public class Mehanicar implements MyEntity {
 
     /** Jedinstveni identifikator mehaničara. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+ 
     /** Ime mehaničara. */
     @Column(nullable = false)
     private String ime;
