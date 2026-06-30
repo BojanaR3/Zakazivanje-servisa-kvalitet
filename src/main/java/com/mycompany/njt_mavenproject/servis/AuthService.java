@@ -12,6 +12,7 @@ import com.mycompany.njt_mavenproject.entity.impl.PasswordResetToken;
 import com.mycompany.njt_mavenproject.entity.impl.Uloga;
 import com.mycompany.njt_mavenproject.entity.impl.VerificationToken;
 import com.mycompany.njt_mavenproject.entity.impl.Vlasnik;
+import com.mycompany.njt_mavenproject.exception.RegistrationException;
 import com.mycompany.njt_mavenproject.mapper.impl.VlasnikMapper;
 import com.mycompany.njt_mavenproject.repository.impl.PasswordResetTokenRepository;
 import com.mycompany.njt_mavenproject.repository.impl.VerificationTokenRepository;
@@ -97,13 +98,13 @@ public class AuthService {
      *
      * @param req podaci za registraciju novog korisnika
      * @return DTO objekat novokreiranog vlasnika
-     * @throws Exception ako korisničko ime ili email adresa već postoje u sistemu
+     * @throws RegistrationException ako korisničko ime ili email adresa već postoje u sistemu
      */
-    public VlasnikDto register(RegisterRequest req) throws Exception {
+    public VlasnikDto register(RegisterRequest req) throws RegistrationException {
         if (users.existsByUsername(req.getUsername()))
-            throw new Exception("Username already taken");
+            throw new RegistrationException("Username already taken");
         if (users.existsByEmail(req.getEmail()))
-            throw new Exception("Email already taken");
+            throw new RegistrationException("Email already taken");
 
         Vlasnik u = new Vlasnik();
         u.setIme(req.getIme());

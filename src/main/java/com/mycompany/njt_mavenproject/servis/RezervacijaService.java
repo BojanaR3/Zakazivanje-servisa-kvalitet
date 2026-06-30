@@ -7,6 +7,8 @@ package com.mycompany.njt_mavenproject.servis;
 import com.mycompany.njt_mavenproject.dto.impl.RezervacijaDto;
 import com.mycompany.njt_mavenproject.dto.impl.StavkaRezervacijeDto;
 import com.mycompany.njt_mavenproject.entity.impl.*;
+import com.mycompany.njt_mavenproject.exception.EntityNotFoundException;
+import com.mycompany.njt_mavenproject.exception.UserNotFoundException;
 import com.mycompany.njt_mavenproject.mapper.impl.RezervacijaMapper;
 import com.mycompany.njt_mavenproject.repository.impl.RezervacijaRepository;
 import com.mycompany.njt_mavenproject.repository.impl.VlasnikRepository;
@@ -101,9 +103,9 @@ public class RezervacijaService {
      *
      * @param id identifikator rezervacije koja se traži
      * @return DTO objekat pronađene rezervacije
-     * @throws Exception ako rezervacija sa datim ID-jem ne postoji
+     * @throws EntityNotFoundException ako rezervacija sa datim ID-jem ne postoji
      */
-    public RezervacijaDto findById(Long id) throws Exception {
+    public RezervacijaDto findById(Long id) throws EntityNotFoundException {
         return mapper.toDto(repo.findById(id));
     }
 
@@ -118,14 +120,14 @@ public class RezervacijaService {
      * @return DTO objekat novokreirane rezervacije
      * @throws IllegalArgumentException ako nedostaju obavezni podaci
      * @throws IllegalStateException    ako je termin zauzet ili cena nije definisana
-     * @throws Exception                ako korisnik sa datim korisničkim imenom ne postoji
+     * @throws UserNotFoundException    ako korisnik sa datim korisničkim imenom ne postoji
      */
     @Transactional
-    public RezervacijaDto create(RezervacijaDto dto, String username) throws Exception {
+    public RezervacijaDto create(RezervacijaDto dto, String username) throws UserNotFoundException {
         if (dto.getDatum() == null) throw new IllegalArgumentException("datum je obavezan.");
 
         Vlasnik vlasnik = vlasnici.findByUsername(username);
-        if (vlasnik == null) throw new Exception("Nepoznat korisnik: " + username);
+        if (vlasnik == null) throw new UserNotFoundException("Nepoznat korisnik: " + username);
 
         Rezervacija r = mapper.toEntity(dto);
 
@@ -189,10 +191,10 @@ public class RezervacijaService {
      * @param id     identifikator rezervacije čiji se status menja
      * @param status novi status koji se postavlja
      * @return DTO objekat ažurirane rezervacije
-     * @throws Exception ako rezervacija sa datim ID-jem ne postoji
+     * @throws EntityNotFoundException ako rezervacija sa datim ID-jem ne postoji
      */
     @Transactional
-    public RezervacijaDto updateStatus(Long id, StatusRezervacije status) throws Exception {
+    public RezervacijaDto updateStatus(Long id, StatusRezervacije status) throws EntityNotFoundException {
         Rezervacija r = repo.findById(id);
         r.setStatus(status);
         repo.save(r);
@@ -267,13 +269,14 @@ public class RezervacijaService {
      *
      * @param id       identifikator rezervacije koja se otkazuje
      * @param username korisničko ime vlasnika koji otkazuje rezervaciju
-     * @throws IllegalStateException ako rezervacija ne pripada korisniku ili nije u statusu CREATED
-     * @throws Exception             ako korisnik sa datim korisničkim imenom ne postoji
+     * @throws IllegalStateException   ako rezervacija ne pripada korisniku ili nije u statusu CREATED
+     * @throws UserNotFoundException   ako korisnik sa datim korisničkim imenom ne postoji
+     * @throws EntityNotFoundException ako rezervacija sa datim ID-jem ne postoji
      */
     @Transactional
-    public void cancelMy(Long id, String username) throws Exception {
+    public void cancelMy(Long id, String username) throws UserNotFoundException, EntityNotFoundException {
         Vlasnik vlasnik = vlasnici.findByUsername(username);
-        if (vlasnik == null) throw new Exception("Nepoznat korisnik: " + username);
+        if (vlasnik == null) throw new UserNotFoundException("Nepoznat korisnik: " + username);
 
         Rezervacija r = repo.findById(id);
         if (!r.getVlasnik().getId().equals(vlasnik.getId()))
@@ -295,14 +298,15 @@ public class RezervacijaService {
      * @return DTO objekat ažurirane rezervacije sa novim terminom
      * @throws IllegalArgumentException ako novi datum nije prosleđen
      * @throws IllegalStateException    ako rezervacija ne pripada korisniku, nije u statusu CREATED ili je novi termin zauzet
-     * @throws Exception                ako korisnik sa datim korisničkim imenom ne postoji
+     * @throws UserNotFoundException    ako korisnik sa datim korisničkim imenom ne postoji
+     * @throws EntityNotFoundException  ako rezervacija sa datim ID-jem ne postoji
      */
     @Transactional
-    public RezervacijaDto rescheduleMy(Long id, LocalDateTime novi, String username) throws Exception {
+    public RezervacijaDto rescheduleMy(Long id, LocalDateTime novi, String username) throws UserNotFoundException, EntityNotFoundException {
         if (novi == null) throw new IllegalArgumentException("Novi datum je obavezan.");
 
         Vlasnik vlasnik = vlasnici.findByUsername(username);
-        if (vlasnik == null) throw new Exception("Nepoznat korisnik: " + username);
+        if (vlasnik == null) throw new UserNotFoundException("Nepoznat korisnik: " + username);
 
         Rezervacija r = repo.findById(id);
 

@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.mycompany.njt_mavenproject.dto.impl.RacunDto;
 import com.mycompany.njt_mavenproject.entity.impl.Racun;
+import com.mycompany.njt_mavenproject.exception.EntityNotFoundException;
 import com.mycompany.njt_mavenproject.mapper.impl.RacunMapper;
 import com.mycompany.njt_mavenproject.repository.impl.RacunRepository;
 
@@ -96,9 +97,9 @@ class RacunServisTest {
 
     @Test
     void testFindByIdNePostoji() throws Exception {
-        when(repo.findById(99L)).thenThrow(new Exception("Racun #99 ne postoji."));
+        when(repo.findById(99L)).thenThrow(new EntityNotFoundException("Racun #99 ne postoji."));
 
-        Exception ex = assertThrows(Exception.class, () -> {
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
             racunServis.findById(99L);
         });
         assertEquals("Racun #99 ne postoji.", ex.getMessage());
@@ -138,9 +139,9 @@ class RacunServisTest {
 
     @Test
     void testUpdateStatusNePostoji() throws Exception {
-        when(repo.findById(99L)).thenThrow(new Exception("Racun #99 ne postoji."));
+        when(repo.findById(99L)).thenThrow(new EntityNotFoundException("Racun #99 ne postoji."));
 
-        assertThrows(Exception.class, () -> {
+        assertThrows(EntityNotFoundException.class, () -> {
             racunServis.updateStatus(99L, "PLACENO");
         });
     }

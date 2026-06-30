@@ -21,6 +21,8 @@ import com.mycompany.njt_mavenproject.entity.impl.Rezervacija;
 import com.mycompany.njt_mavenproject.entity.impl.Servis;
 import com.mycompany.njt_mavenproject.entity.impl.StatusRezervacije;
 import com.mycompany.njt_mavenproject.entity.impl.Vlasnik;
+import com.mycompany.njt_mavenproject.exception.EntityNotFoundException;
+import com.mycompany.njt_mavenproject.exception.UserNotFoundException;
 import com.mycompany.njt_mavenproject.mapper.impl.RezervacijaMapper;
 import com.mycompany.njt_mavenproject.repository.impl.RezervacijaRepository;
 import com.mycompany.njt_mavenproject.repository.impl.ServisUslugaRepository;
@@ -146,9 +148,9 @@ class RezervacijaServiceTest {
 
     @Test
     void testFindByIdNePostoji() throws Exception {
-        when(repo.findById(99L)).thenThrow(new Exception("Rezervacija nije pronađena: 99"));
+        when(repo.findById(99L)).thenThrow(new EntityNotFoundException("Rezervacija nije pronađena: 99"));
 
-        Exception ex = assertThrows(Exception.class, () -> {
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
             rezervacijaService.findById(99L);
         });
         assertEquals("Rezervacija nije pronađena: 99", ex.getMessage());
@@ -167,9 +169,9 @@ class RezervacijaServiceTest {
 
     @Test
     void testUpdateStatusNePostoji() throws Exception {
-        when(repo.findById(99L)).thenThrow(new Exception("Rezervacija nije pronađena: 99"));
+        when(repo.findById(99L)).thenThrow(new EntityNotFoundException("Rezervacija nije pronađena: 99"));
 
-        assertThrows(Exception.class, () -> {
+        assertThrows(EntityNotFoundException.class, () -> {
             rezervacijaService.updateStatus(99L, StatusRezervacije.CONFIRMED);
         });
     }
@@ -194,7 +196,7 @@ class RezervacijaServiceTest {
     void testCancelMyNepoznatKorisnik() {
         when(vlasnici.findByUsername("nepostoji")).thenReturn(null);
 
-        assertThrows(Exception.class, () -> {
+        assertThrows(UserNotFoundException.class, () -> {
             rezervacijaService.cancelMy(1L, "nepostoji");
         });
     }

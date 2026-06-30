@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.mycompany.njt_mavenproject.dto.impl.MehanicarDto;
 import com.mycompany.njt_mavenproject.entity.impl.Mehanicar;
+import com.mycompany.njt_mavenproject.exception.EntityNotFoundException;
 import com.mycompany.njt_mavenproject.mapper.impl.MehanicarMapper;
 import com.mycompany.njt_mavenproject.repository.impl.MehanicarRepository;
 
@@ -116,9 +117,9 @@ class MehanicarServisTest {
 
     @Test
     void testFindByIdNePostoji() throws Exception {
-        when(repo.findById(99L)).thenThrow(new Exception("Mehanicar #99 ne postoji."));
+        when(repo.findById(99L)).thenThrow(new EntityNotFoundException("Mehanicar #99 ne postoji."));
 
-        Exception exception = assertThrows(Exception.class, () -> {
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
             mehanicarServis.findById(99L);
         });
         assertEquals("Mehanicar #99 ne postoji.", exception.getMessage());
@@ -148,10 +149,10 @@ class MehanicarServisTest {
 
     @Test
     void testUpdateNePostoji() throws Exception {
-        when(repo.findById(99L)).thenThrow(new Exception("Mehanicar #99 ne postoji."));
+        when(repo.findById(99L)).thenThrow(new EntityNotFoundException("Mehanicar #99 ne postoji."));
         mehanicarDto.setId(99L);
 
-        assertThrows(Exception.class, () -> {
+        assertThrows(EntityNotFoundException.class, () -> {
             mehanicarServis.update(mehanicarDto);
         });
     }
