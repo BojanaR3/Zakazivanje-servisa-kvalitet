@@ -1,6 +1,7 @@
 package com.mycompany.njt_mavenproject.repository.impl;
 
 import com.mycompany.njt_mavenproject.entity.impl.Mehanicar;
+import com.mycompany.njt_mavenproject.exception.EntityNotFoundException;
 import com.mycompany.njt_mavenproject.repository.MyAppRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -35,12 +36,12 @@ public class MehanicarRepository implements MyAppRepository<Mehanicar, Long> {
      *
      * @param id identifikator mehaničara koji se traži
      * @return pronađeni mehaničar
-     * @throws Exception ako mehaničar sa datim ID-jem ne postoji
+     * @throws EntityNotFoundException ako mehaničar sa datim ID-jem ne postoji
      */
     @Override
-    public Mehanicar findById(Long id) throws Exception {
+    public Mehanicar findById(Long id) throws EntityNotFoundException {
         Mehanicar m = em.find(Mehanicar.class, id);
-        if (m == null) throw new Exception("Mehanicar #" + id + " ne postoji.");
+        if (m == null) throw new EntityNotFoundException("Mehanicar #" + id + " ne postoji.");
         return m;
     }
 

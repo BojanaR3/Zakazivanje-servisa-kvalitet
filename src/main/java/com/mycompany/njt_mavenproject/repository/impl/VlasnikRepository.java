@@ -5,6 +5,7 @@
 package com.mycompany.njt_mavenproject.repository.impl;
 
 import com.mycompany.njt_mavenproject.entity.impl.Vlasnik;
+import com.mycompany.njt_mavenproject.exception.EntityNotFoundException;
 import com.mycompany.njt_mavenproject.repository.MyAppRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -41,12 +42,12 @@ public class VlasnikRepository implements MyAppRepository<Vlasnik, Long> {
      *
      * @param id identifikator vlasnika koji se traži
      * @return pronađeni vlasnik
-     * @throws Exception ako vlasnik sa datim ID-jem ne postoji
+     * @throws EntityNotFoundException ako vlasnik sa datim ID-jem ne postoji
      */
     @Override
-    public Vlasnik findById(Long id) throws Exception {
+    public Vlasnik findById(Long id) throws EntityNotFoundException {
         Vlasnik v = em.find(Vlasnik.class, id);
-        if (v == null) throw new Exception("Vlasnik nije pronađen!");
+        if (v == null) throw new EntityNotFoundException("Vlasnik nije pronađen!");
         return v;
     }
 

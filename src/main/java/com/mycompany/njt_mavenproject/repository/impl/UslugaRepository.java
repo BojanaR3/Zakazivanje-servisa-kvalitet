@@ -5,6 +5,7 @@
 package com.mycompany.njt_mavenproject.repository.impl;
 
 import com.mycompany.njt_mavenproject.entity.impl.Usluga;
+import com.mycompany.njt_mavenproject.exception.EntityNotFoundException;
 import com.mycompany.njt_mavenproject.repository.MyAppRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -39,13 +40,13 @@ public class UslugaRepository implements MyAppRepository<Usluga, Long> {
      *
      * @param id identifikator usluge koja se traži
      * @return pronađena usluga
-     * @throws Exception ako usluga sa datim ID-jem ne postoji
+     * @throws EntityNotFoundException ako usluga sa datim ID-jem ne postoji
      */
     @Override
-    public Usluga findById(Long id) throws Exception {
+    public Usluga findById(Long id) throws EntityNotFoundException {
         Usluga usluga = entityManager.find(Usluga.class, id);
         if (usluga == null) {
-            throw new Exception("Usluga nije pronađena!");
+            throw new EntityNotFoundException("Usluga nije pronađena!");
         }
         return usluga;
     }

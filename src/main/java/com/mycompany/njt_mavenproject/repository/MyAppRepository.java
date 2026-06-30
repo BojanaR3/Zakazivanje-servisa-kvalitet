@@ -4,6 +4,8 @@
  */
 package com.mycompany.njt_mavenproject.repository;
 import java.util.List;
+
+import com.mycompany.njt_mavenproject.exception.EntityNotFoundException;
 /**
  * Generički interfejs koji definiše osnovne CRUD operacije
  * za sve repozitorijume u aplikaciji.
@@ -24,9 +26,9 @@ public interface MyAppRepository<T, ID> {
      *
      * @param id identifikator entiteta koji se traži
      * @return pronađeni entitet
-     * @throws Exception ako entitet sa datim ID-jem ne postoji
+     * @throws EntityNotFoundException ako entitet sa datim ID-jem ne postoji
      */
-    T findById(ID id) throws Exception;
+    T findById(ID id) throws EntityNotFoundException;
     /**
      * Čuva novi entitet ili ažurira postojeći u bazi podataka.
      *

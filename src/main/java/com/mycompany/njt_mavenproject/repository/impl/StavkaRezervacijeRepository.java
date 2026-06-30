@@ -5,6 +5,7 @@
 package com.mycompany.njt_mavenproject.repository.impl;
 
 import com.mycompany.njt_mavenproject.entity.impl.StavkaRezervacije;
+import com.mycompany.njt_mavenproject.exception.EntityNotFoundException;
 import com.mycompany.njt_mavenproject.repository.MyAppRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -40,13 +41,13 @@ public class StavkaRezervacijeRepository implements MyAppRepository<StavkaRezerv
      *
      * @param id identifikator stavke rezervacije koja se traži
      * @return pronađena stavka rezervacije
-     * @throws Exception ako stavka sa datim ID-jem ne postoji
+     * @throws EntityNotFoundException ako stavka sa datim ID-jem ne postoji
      */
     @Override
-    public StavkaRezervacije findById(Long id) throws Exception {
+    public StavkaRezervacije findById(Long id) throws EntityNotFoundException {
         StavkaRezervacije stavka = entityManager.find(StavkaRezervacije.class, id);
         if (stavka == null) {
-            throw new Exception("Stavka rezervacije nije pronađena!");
+            throw new EntityNotFoundException("Stavka rezervacije nije pronađena!");
         }
         return stavka;
     }

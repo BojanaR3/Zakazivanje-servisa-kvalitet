@@ -5,6 +5,7 @@
 package com.mycompany.njt_mavenproject.repository.impl;
 
 import com.mycompany.njt_mavenproject.entity.impl.Vozilo;
+import com.mycompany.njt_mavenproject.exception.EntityNotFoundException;
 import com.mycompany.njt_mavenproject.repository.MyAppRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -42,12 +43,12 @@ public class VoziloRepository implements MyAppRepository<Vozilo, Long> {
      *
      * @param id identifikator vozila koje se traži
      * @return pronađeno vozilo
-     * @throws Exception ako vozilo sa datim ID-jem ne postoji
+     * @throws EntityNotFoundException ako vozilo sa datim ID-jem ne postoji
      */
     @Override
-    public Vozilo findById(Long id) throws Exception {
+    public Vozilo findById(Long id) throws EntityNotFoundException {
         Vozilo vozilo = entityManager.find(Vozilo.class, id);
-        if (vozilo == null) throw new Exception("Vozilo nije pronađeno: " + id);
+        if (vozilo == null) throw new EntityNotFoundException("Vozilo nije pronađeno: " + id);
         return vozilo;
     }
 

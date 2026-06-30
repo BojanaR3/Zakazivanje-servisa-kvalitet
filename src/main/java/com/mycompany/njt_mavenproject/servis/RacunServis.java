@@ -3,6 +3,7 @@ package com.mycompany.njt_mavenproject.servis;
 import com.mycompany.njt_mavenproject.dto.impl.RacunDto;
 import com.mycompany.njt_mavenproject.entity.impl.Racun;
 import com.mycompany.njt_mavenproject.entity.impl.Rezervacija;
+import com.mycompany.njt_mavenproject.exception.EntityNotFoundException;
 import com.mycompany.njt_mavenproject.mapper.impl.RacunMapper;
 import com.mycompany.njt_mavenproject.repository.impl.RacunRepository;
 import jakarta.persistence.EntityManager;
@@ -57,9 +58,9 @@ public class RacunServis {
      *
      * @param id identifikator računa koji se traži
      * @return DTO objekat pronađenog računa
-     * @throws Exception ako račun sa datim ID-jem ne postoji
+     * @throws EntityNotFoundException ako račun sa datim ID-jem ne postoji
      */
-    public RacunDto findById(Long id) throws Exception {
+    public RacunDto findById(Long id) throws EntityNotFoundException {
         return mapper.toDto(repo.findById(id));
     }
 
@@ -98,10 +99,10 @@ public class RacunServis {
      * @param id     identifikator računa čiji se status menja
      * @param status novi status plaćanja koji se postavlja
      * @return DTO objekat ažuriranog računa
-     * @throws Exception ako račun sa datim ID-jem ne postoji
+     * @throws EntityNotFoundException ako račun sa datim ID-jem ne postoji
      */
     @Transactional
-    public RacunDto updateStatus(Long id, String status) throws Exception {
+    public RacunDto updateStatus(Long id, String status) throws EntityNotFoundException {
         Racun r = repo.findById(id);
         r.setStatusPlacanja(status);
         repo.save(r);

@@ -1,6 +1,7 @@
 package com.mycompany.njt_mavenproject.repository.impl;
 
 import com.mycompany.njt_mavenproject.entity.impl.Racun;
+import com.mycompany.njt_mavenproject.exception.EntityNotFoundException;
 import com.mycompany.njt_mavenproject.repository.MyAppRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -36,12 +37,12 @@ public class RacunRepository implements MyAppRepository<Racun, Long> {
      *
      * @param id identifikator računa koji se traži
      * @return pronađeni račun
-     * @throws Exception ako račun sa datim ID-jem ne postoji
+     * @throws EntityNotFoundException ako račun sa datim ID-jem ne postoji
      */
     @Override
-    public Racun findById(Long id) throws Exception {
+    public Racun findById(Long id) throws EntityNotFoundException {
         Racun r = em.find(Racun.class, id);
-        if (r == null) throw new Exception("Racun #" + id + " ne postoji.");
+        if (r == null) throw new EntityNotFoundException("Racun #" + id + " ne postoji.");
         return r;
     }
 

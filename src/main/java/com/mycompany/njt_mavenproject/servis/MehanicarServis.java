@@ -3,6 +3,7 @@ package com.mycompany.njt_mavenproject.servis;
 import com.mycompany.njt_mavenproject.dto.impl.MehanicarDto;
 import com.mycompany.njt_mavenproject.entity.impl.Mehanicar;
 import com.mycompany.njt_mavenproject.entity.impl.Servis;
+import com.mycompany.njt_mavenproject.exception.EntityNotFoundException;
 import com.mycompany.njt_mavenproject.mapper.impl.MehanicarMapper;
 import com.mycompany.njt_mavenproject.repository.impl.MehanicarRepository;
 import jakarta.persistence.EntityManager;
@@ -66,9 +67,9 @@ public class MehanicarServis {
      *
      * @param id identifikator mehaničara koji se traži
      * @return DTO objekat pronađenog mehaničara
-     * @throws Exception ako mehaničar sa datim ID-jem ne postoji
+     * @throws EntityNotFoundException ako mehaničar sa datim ID-jem ne postoji
      */
-    public MehanicarDto findById(Long id) throws Exception {
+    public MehanicarDto findById(Long id) throws EntityNotFoundException {
         return mapper.toDto(repo.findById(id));
     }
 
@@ -93,10 +94,10 @@ public class MehanicarServis {
      *
      * @param dto DTO objekat sa ažuriranim podacima mehaničara
      * @return DTO objekat ažuriranog mehaničara
-     * @throws Exception ako mehaničar sa datim ID-jem ne postoji
+     * @throws EntityNotFoundException ako mehaničar sa datim ID-jem ne postoji
      */
     @Transactional
-    public MehanicarDto update(MehanicarDto dto) throws Exception {
+    public MehanicarDto update(MehanicarDto dto) throws EntityNotFoundException {
         Mehanicar m = repo.findById(dto.getId());
         m.setIme(dto.getIme());
         m.setPrezime(dto.getPrezime());

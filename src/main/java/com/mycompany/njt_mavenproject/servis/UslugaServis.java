@@ -2,6 +2,7 @@ package com.mycompany.njt_mavenproject.servis;
 
 import com.mycompany.njt_mavenproject.dto.impl.UslugaDto;
 import com.mycompany.njt_mavenproject.entity.impl.Usluga;
+import com.mycompany.njt_mavenproject.exception.EntityNotFoundException;
 import com.mycompany.njt_mavenproject.mapper.impl.UslugaMapper;
 import com.mycompany.njt_mavenproject.repository.impl.ServisUslugaRepository;
 import com.mycompany.njt_mavenproject.repository.impl.UslugaRepository;
@@ -58,9 +59,9 @@ public class UslugaServis {
      *
      * @param id identifikator usluge koja se traži
      * @return DTO objekat pronađene usluge
-     * @throws Exception ako usluga sa datim ID-jem ne postoji
+     * @throws EntityNotFoundException ako usluga sa datim ID-jem ne postoji
      */
-    public UslugaDto findById(Long id) throws Exception {
+    public UslugaDto findById(Long id) throws EntityNotFoundException {
         return mapper.toDto(usluge.findById(id));
     }
 
@@ -89,7 +90,7 @@ public class UslugaServis {
     public UslugaDto update(UslugaDto dto) {
         Usluga existing;
         try { existing = usluge.findById(dto.getId()); }
-        catch (Exception e) { throw new RuntimeException("Usluga ne postoji: " + dto.getId()); }
+        catch (EntityNotFoundException e) { throw new RuntimeException("Usluga ne postoji: " + dto.getId()); }
         existing.setNaziv(dto.getNaziv());
         existing.setTrajanje(dto.getTrajanje());
         existing.setJedinicaMere(dto.getJedinicaMere());

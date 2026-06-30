@@ -15,6 +15,7 @@ package com.mycompany.njt_mavenproject.repository.impl;
 import com.mycompany.njt_mavenproject.entity.impl.Servis;
 import com.mycompany.njt_mavenproject.entity.impl.ServisUsluga;
 import com.mycompany.njt_mavenproject.entity.impl.Usluga;
+import com.mycompany.njt_mavenproject.exception.EntityNotFoundException;
 import com.mycompany.njt_mavenproject.repository.MyAppRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -43,12 +44,12 @@ public class ServisUslugaRepository implements MyAppRepository<ServisUsluga, Lon
      *
      * @param id identifikator stavke cenovnika koja se traži
      * @return pronađena stavka cenovnika
-     * @throws Exception ako stavka sa datim ID-jem ne postoji
+     * @throws EntityNotFoundException ako stavka sa datim ID-jem ne postoji
      */
     @Override
-    public ServisUsluga findById(Long id) throws Exception {
+    public ServisUsluga findById(Long id) throws EntityNotFoundException {
         ServisUsluga su = em.find(ServisUsluga.class, id);
-        if (su == null) throw new Exception("ServisUsluga nije pronađena: " + id);
+        if (su == null) throw new EntityNotFoundException("ServisUsluga nije pronađena: " + id);
         return su;
     }
 

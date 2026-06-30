@@ -2,6 +2,7 @@ package com.mycompany.njt_mavenproject.servis;
 
 import com.mycompany.njt_mavenproject.dto.impl.ServisDto;
 import com.mycompany.njt_mavenproject.entity.impl.Servis;
+import com.mycompany.njt_mavenproject.exception.EntityNotFoundException;
 import com.mycompany.njt_mavenproject.mapper.impl.ServisMapper;
 import com.mycompany.njt_mavenproject.repository.impl.ServisRepository;
 import com.mycompany.njt_mavenproject.repository.impl.ServisUslugaRepository;
@@ -56,9 +57,9 @@ public class ServisServis {
      *
      * @param id identifikator servisa koji se traži
      * @return DTO objekat pronađenog servisa
-     * @throws Exception ako servis sa datim ID-jem ne postoji
+     * @throws EntityNotFoundException ako servis sa datim ID-jem ne postoji
      */
-    public ServisDto findById(Long id) throws Exception {
+    public ServisDto findById(Long id) throws EntityNotFoundException {
         return mapper.toDto(repo.findById(id));
     }
 
@@ -87,7 +88,7 @@ public class ServisServis {
     public ServisDto update(ServisDto dto) {
         Servis s;
         try { s = repo.findById(dto.getId()); }
-        catch (Exception e) { throw new RuntimeException("Servis ne postoji: " + dto.getId()); }
+        catch (EntityNotFoundException e) { throw new RuntimeException("Servis ne postoji: " + dto.getId()); }
         s.setNaziv(dto.getNaziv());
         s.setAdresa(dto.getAdresa());
         s.setTelefon(dto.getTelefon());
