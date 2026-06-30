@@ -12,6 +12,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.mycompany.njt_mavenproject.exception.MailSendException;
+
 /**
  * Servis za slanje email poruka korisnicima aplikacije.
  * Podržava slanje običnih tekstualnih poruka i HTML emailova.
@@ -74,7 +76,7 @@ public class MailService {
             h.setText(html, true);
             mail.send(mm);
         } catch (MessagingException e) {
-            throw new RuntimeException("Slanje HTML mejla neuspešno", e);
+            throw new MailSendException("Slanje HTML mejla neuspešno", e);
         }
     }
 }
