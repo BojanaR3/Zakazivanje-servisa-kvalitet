@@ -31,6 +31,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private static final String ROLE_ADMIN = "ADMIN";
+    private static final String API_SERVIS = "/api/servis/**";
+    private static final String API_USLUGA = "/api/usluga/**";
+    private static final String API_MEHANICARI = "/api/mehanicari/**";
+    private static final String API_RACUNI = "/api/racuni/**";
+
     private final JwtAuthFilter jwtFilter;
     private final AppUserDetailsService uds;
 
@@ -72,25 +78,25 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/auth/me").authenticated()
                 .requestMatchers("/api/auth/**").permitAll()
 
-                .requestMatchers(HttpMethod.GET,    "/api/servis/**").permitAll()
-                .requestMatchers(HttpMethod.POST,   "/api/servis/**").permitAll()
-                .requestMatchers(HttpMethod.PUT,    "/api/servis/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/servis/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET,    API_SERVIS).permitAll()
+                .requestMatchers(HttpMethod.POST,   API_SERVIS).permitAll()
+                .requestMatchers(HttpMethod.PUT,    API_SERVIS).hasRole(ROLE_ADMIN)
+                .requestMatchers(HttpMethod.DELETE, API_SERVIS).hasRole(ROLE_ADMIN)
 
-                .requestMatchers(HttpMethod.GET,    "/api/usluga/**").permitAll()
-                .requestMatchers(HttpMethod.POST,   "/api/usluga/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT,    "/api/usluga/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/usluga/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET,    API_USLUGA).permitAll()
+                .requestMatchers(HttpMethod.POST,   API_USLUGA).hasRole(ROLE_ADMIN)
+                .requestMatchers(HttpMethod.PUT,    API_USLUGA).hasRole(ROLE_ADMIN)
+                .requestMatchers(HttpMethod.DELETE, API_USLUGA).hasRole(ROLE_ADMIN)
 
-                .requestMatchers(HttpMethod.GET,    "/api/mehanicari/**").permitAll()
-                .requestMatchers(HttpMethod.POST,   "/api/mehanicari/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT,    "/api/mehanicari/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/mehanicari/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET,    API_MEHANICARI).permitAll()
+                .requestMatchers(HttpMethod.POST,   API_MEHANICARI).hasRole(ROLE_ADMIN)
+                .requestMatchers(HttpMethod.PUT,    API_MEHANICARI).hasRole(ROLE_ADMIN)
+                .requestMatchers(HttpMethod.DELETE, API_MEHANICARI).hasRole(ROLE_ADMIN)
 
-                .requestMatchers(HttpMethod.GET,    "/api/racuni/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST,   "/api/racuni/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PATCH,  "/api/racuni/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/racuni/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET,    API_RACUNI).hasRole(ROLE_ADMIN)
+                .requestMatchers(HttpMethod.POST,   API_RACUNI).hasRole(ROLE_ADMIN)
+                .requestMatchers(HttpMethod.PATCH,  API_RACUNI).hasRole(ROLE_ADMIN)
+                .requestMatchers(HttpMethod.DELETE, API_RACUNI).hasRole(ROLE_ADMIN)
 
                 .requestMatchers("/api/rezervacija/**").authenticated()
 
