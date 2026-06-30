@@ -278,7 +278,7 @@ public class RezervacijaService {
         Rezervacija r = repo.findById(id);
         if (!r.getVlasnik().getId().equals(vlasnik.getId()))
             throw new IllegalStateException("Nije tvoja rezervacija.");
-        if (r.getStatus() != StatusRezervacije.CREATED)
+        if (!StatusRezervacije.CREATED.equals(r.getStatus()))
             throw new IllegalStateException("Samo rezervacije u statusu CREATED mogu da se otkažu.");
 
         repo.deleteById(id);
@@ -308,7 +308,7 @@ public class RezervacijaService {
 
         if (!r.getVlasnik().getId().equals(vlasnik.getId()))
             throw new IllegalStateException("Nije tvoja rezervacija.");
-        if (r.getStatus() != StatusRezervacije.CREATED)
+        if (!StatusRezervacije.CREATED.equals(r.getStatus()))
             throw new IllegalStateException("Samo rezervacije u statusu CREATED mogu da se menjaju.");
 
         int traj = (r.getTrajanjeMin() == null || r.getTrajanjeMin() <= 0)
